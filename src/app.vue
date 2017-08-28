@@ -1,9 +1,11 @@
 <template>
-  <div>
-    <router-link :to="{ path: '/user' }">toUser</router-link>
+  <div id="app">
+    <!-- <router-link :to="{ path: '/user' }">toUser</router-link>
     <router-link to="/user">toUser</router-link>
-     <router-link :to="{ name: 'user' }">toUser</router-link> 
-    <a href="javascript:;" @click="go">link</a>
+    <router-link :to="{ name: 'user' }">toUser</router-link> 
+    <a href="javascript:;" @click="go">link</a> -->
+    <!-- <router-link :to="{ name: 'login' }">Login</router-link>   -->
+    <!-- <a href="javascript:;" @click="login">Login</a> -->
     <router-view></router-view>
   </div>
 </template>
@@ -22,6 +24,11 @@ export default {
         params: {
           id: 123
         }
+      })
+    },
+    login() {
+      this.$router.push({
+        name: 'login',
       })
     }
   }

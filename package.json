@@ -10,11 +10,14 @@
     "start": "npm run watch && npm run serve"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "babel-polyfill": "^6.26.0",
     "express": "^4.15.4",
+    "js-cookie": "^2.1.4",
     "less": "^2.7.2",
     "mysql": "^2.14.1",
     "vue": "^2.4.2",
+    "vue-cookie": "^1.1.4",
     "vue-loader": "^13.0.4",
     "vue-router": "^2.7.0",
     "vue-template-compiler": "^2.4.2"

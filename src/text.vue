@@ -1,10 +1,10 @@
 <template>
   <div>
     <input type="text" v-model="content" v-on:keyup.enter="submit">
-    <ul v-for="(item,index) in arr">
+    <!-- <ul v-for="(item,index) in arr">
         <li>{{item}}</li>
         <button v-on:click="deleteItem(index)">X</button>
-    </ul>
+    </ul> -->
   </div>
 </template>
 
@@ -18,6 +18,7 @@ export default {
   },
    methods: {
     submit() {
+      console.log(this);
         this.arr.push(this.content);
         this.content = '';
     },

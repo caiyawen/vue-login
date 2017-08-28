@@ -10,11 +10,11 @@
 export default {
   name: 'user',
   beforeRouteEnter: function(to, from, next) {
-    alert('beforeRouteEnter');
+    // alert('beforeRouteEnter');
     next(true);
   },
   beforeRouteLeave: function(to, from, next) {
-    alert('beforeRouteLeave');
+    // alert('beforeRouteLeave');
     next(true);
   }
 }

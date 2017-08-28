@@ -5,39 +5,33 @@ import 'babel-polyfill';
 import Vue from 'vue';
 import App from './app.vue';
 import VueRouter from 'vue-router';
+import routes from '../router';
+import VueCookie from 'vue-cookie';
+import Axios from 'axios';
 
-import User from './User.vue';
-import Activity from './Activity.vue';
-import A from './A.vue';
+Vue.prototype.$axios = Axios;
 
 Vue.use(VueRouter);
+Vue.use(VueCookie);
+// Vue.use(Axios);
 
 const router = new VueRouter({
-    routes: [{
-        path: '/user',
-        component: User,
-        name: 'user',
-        children: [{
-                path: 'detail',
-                component: Activity,
-                beforeEnter: function(to, from, next) {
-                    alert(123);
-                    console.log(to);
-                }
-            },
-            {
-                path: 'info/:id',
-                name: 'info',
-                components: {
-                    default: Activity,
-                    'a': A,
-                }
-            }
-        ]
-    }]
+    routes
+})
+
+router.beforeEach((to, from, next) => {
+    var isLogin = Vue.cookie.get('username');
+    var toPage = to.name;
+    console.log(isLogin, toPage)
+    if (!isLogin && toPage !== 'login') {
+        next('/login');
+        return;
+    }
+    next();
 })
 
 new Vue({
+    el: '#app',
     router,
     render: h => h(App)
-}).$mount('#app');
+});
