@@ -10,11 +10,8 @@ module.exports = {
     },
     module: {
         loaders: [{
-                test: /\.less$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: ['css-loader', 'less-loader'],
-                }),
+                test: /\.vue$/,
+                loader: 'vue-loader',
             },
             {
                 test: /\.js$/,
@@ -22,8 +19,26 @@ module.exports = {
                 loader: 'babel-loader',
             },
             {
-                test: /\.vue$/,
-                loader: 'vue-loader',
+                test: /\.css$/,
+                loader: 'style-loader!css-loader'
+            },
+            {
+                test: /\.less$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: ['css-loader', 'less-loader'],
+                }),
+            },
+            {
+                test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
+                loader: 'file-loader'
+            },
+            {
+                test: /\.(png|jpe?g|gif|svg)(\?\S*)?$/,
+                loader: 'file-loader',
+                query: {
+                    name: '[name].[ext]?[hash]'
+                }
             }
         ]
     },

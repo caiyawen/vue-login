@@ -1,11 +1,15 @@
 /**
- * Created by wubo on 2017/8/22.
+ * Created by celine on 2017/8/30.
  */
 const express = require('express');
 const path = require('path');
 const App = express();
 var mysql = require('mysql');
 var bodyParser = require('body-parser');
+var server = require('http').createServer(App);
+var io = require('socket.io')(server);
+var roomInfo = [];
+var arrAllSocket = [];
 
 App.use(bodyParser.json());
 App.use(bodyParser.urlencoded({ extended: false }));
@@ -73,8 +77,73 @@ App.get('/', function(req, res) {
     res.sendFile(path.resolve(__dirname, '../dist/index.html'));
 });
 
-const port = '8089';
-const url = 'http://localhost:8089';
-App.listen(port, function() {
+//socket连接
+io.on('connection', function(socket) {
+    console.log('connection');
+    var url = socket.request.headers.referer;
+    var roomID;
+    var user;
+
+    socket.on('join', function(userName) {
+        console.log(userName);
+        user = userName;
+        // roomID = obj.roomID;
+        arrAllSocket[user] = socket;
+        // if (!roomInfo[roomID]) {
+        //     roomInfo[roomID] = [];
+        // }
+        // roomInfo[roomID].push(user);
+        roomInfo.push(user);
+        // socket.join(roomID);
+        // io.to(roomID).emit('sys', user + '加入了房间', roomInfo[roomID]);
+        io.emit('sys', user + '加入了房间');
+        console.log(user + '加入了');
+    });
+
+    socket.on('leave', function() {
+        socket.emit('disconnect');
+        console.log('disconnect');
+    });
+
+    socket.on('disconnect', function() {
+        var index = roomInfo.indexOf(user);
+        if (index !== -1) {
+            roomInfo.splice(index, 1);
+        }
+        // socket.leave(roomID);
+        io.emit('sys', user + '退出了房间');
+        console.log(user + '退出了');
+    });
+
+    socket.on('message', function(userName, toUserName, msg) {
+        if (roomInfo.indexOf(userName) === -1) {
+            return false;
+        }
+        console.log('userName', userName, 'toUserName', toUserName, 'msg', msg);
+        if (toUserName) {
+            var toTarget = arrAllSocket[toUserName];
+            var target = arrAllSocket[userName];
+            console.log(target);
+            toTarget.emit('msg', userName, toUserName, msg);
+            target.emit('msg', userName, toUserName, msg);
+            console.log('private');
+            return;
+        }
+        io.emit('msg', userName, toUserName, msg);
+    });
+
+    socket.on('private', function(name) {
+        console.log(name);
+    })
+
+    socket.on('disconnect', () => {
+        console.log('连接已断开...');
+    });
+});
+
+
+const port = '8099';
+const url = 'http://localhost:8099';
+server.listen(port, function() {
     console.log('Server is open on %s', url);
 });

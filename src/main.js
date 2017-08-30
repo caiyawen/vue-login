@@ -3,6 +3,8 @@
  */
 import 'babel-polyfill';
 import Vue from 'vue';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-default/index.css';
 import App from './app.vue';
 import VueRouter from 'vue-router';
 import routes from '../router';
@@ -13,22 +15,25 @@ Vue.prototype.$axios = Axios;
 
 Vue.use(VueRouter);
 Vue.use(VueCookie);
+Vue.use(ElementUI);
 // Vue.use(Axios);
+
+window.bus = new Vue();
 
 const router = new VueRouter({
     routes
-})
+});
 
-router.beforeEach((to, from, next) => {
-    var isLogin = Vue.cookie.get('username');
-    var toPage = to.name;
-    console.log(isLogin, toPage)
-    if (!isLogin && toPage !== 'login') {
-        next('/login');
-        return;
-    }
-    next();
-})
+// router.beforeEach((to, from, next) => {
+//     var isLogin = Vue.cookie.get('username');
+//     var toPage = to.name;
+//     console.log(isLogin, toPage)
+//     if (!isLogin && toPage !== 'login') {
+//         next('/login');
+//         return;
+//     }
+//     next();
+// })
 
 new Vue({
     el: '#app',
