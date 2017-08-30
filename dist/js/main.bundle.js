@@ -60471,19 +60471,21 @@ exports.default = {
   name: 'room',
   data: function data() {
     return {
-      message: String,
-      users: Number,
-      userName: ''
+      message: '',
+      users: '',
+      userName: '',
+      msg: '',
+      toUserName: false
     };
   },
   created: function created() {
     this.socket = _socket2.default.connect('127.0.0.1:8099');
     this.userName = this.$cookie.get('userName');
     var password = this.$cookie.get('password');
-    console.log('userName', userName, 'password', password);
+    console.log('userName', this.userName, 'password', password);
     var self = this;
     this.socket.on('connect', function () {
-      self.socket.emit('join', userName);
+      self.socket.emit('join', self.userName);
     });
     this.socket.on('msg', function (userName, toUserName, msg) {
       this.message = '' + '<div class="message">' + '  <span class="user">' + userName + ': </span>' + '  <span class="msg">' + msg + '</span>' + '</div>';
@@ -60509,7 +60511,7 @@ exports.default = {
     },
     submit: function submit() {
       console.log('submit');
-      this.socket.emit('message', this.userName, toUserName, msg);
+      this.socket.emit('message', this.userName, this.toUserName, this.msg);
     }
   }
 }; //
@@ -60562,15 +60564,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     }
   }, [_c('div', {
     staticClass: "chat-info"
-  }, [_c('div', [_vm._v("昵称: "), _c('span', {
-    attrs: {
-      "id": "user"
-    }
-  })]), _vm._v(" "), _c('div', [_vm._v("房间: "), _c('span', {
-    attrs: {
-      "id": "room"
-    }
-  })]), _vm._v(" "), _c('div', [_vm._v("当前在线人数: "), _c('span', {
+  }, [_c('div', [_vm._v("当前在线人数: "), _c('span', {
     attrs: {
       "id": "count"
     }
@@ -60590,14 +60584,27 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
   }, [_c('ul', {
     staticClass: "messages"
   }, [_vm._v("\n                " + _vm._s(_vm.message) + "\n              ")])]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.msg),
+      expression: "msg"
+    }],
     staticClass: "inputMessage",
     attrs: {
       "placeholder": "Type here..."
+    },
+    domProps: {
+      "value": (_vm.msg)
     },
     on: {
       "keyup": function($event) {
         if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13)) { return null; }
         _vm.submit($event)
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.msg = $event.target.value
       }
     }
   })])], 1)], 1)

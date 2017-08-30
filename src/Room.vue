@@ -4,8 +4,8 @@
     <el-row :gutter="24">
         <el-col :span="8">
             <div class="chat-info">
-                <div>昵称: <span id="user"></span></div>
-                <div>房间: <span id="room"></span></div>
+                 <!-- <div>昵称: {{userName}}<div>  -->
+                <!-- <div>房间: </div> -->
                 <div>当前在线人数: <span id="count">{{users.length}}</span></div>
                 <div>用户列表:
                     <ul v-for="user in users">
@@ -21,7 +21,7 @@
                   {{message}}
                 </ul>
             </div>
-            <input class="inputMessage" @keyup.enter="submit" placeholder="Type here..." />
+            <input class="inputMessage" v-model="msg" @keyup.enter="submit" placeholder="Type here..." />
         </el-col>
     </el-row>
   </div>
@@ -34,19 +34,21 @@ export default {
   name: 'room',
   data() {
     return {
-      message: String,
-      users: Number,
+      message: '',
+      users: '',
       userName: '',
+      msg: '',
+      toUserName: false,
     }
   },
   created() {
     this.socket = io.connect('127.0.0.1:8099');
     this.userName = this.$cookie.get('userName');
     let password = this.$cookie.get('password');    
-    console.log('userName', userName, 'password', password);
+    console.log('userName', this.userName, 'password', password);
     let self = this;
     this.socket.on('connect', function() {
-      self.socket.emit('join', userName);
+      self.socket.emit('join', self.userName);
     });
     this.socket.on('msg', function(userName, toUserName, msg) {
         this.message = '' +
@@ -75,7 +77,7 @@ export default {
     },
     submit() {
       console.log('submit');
-      this.socket.emit('message', this.userName, toUserName, msg);
+      this.socket.emit('message', this.userName, this.toUserName, this.msg);
     }
   }
 }
