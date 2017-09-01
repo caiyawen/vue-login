@@ -91,16 +91,16 @@ io.on('connection', function(socket) {
         arrAllSocket[user] = socket;
         if (userName !== null && usersInfo.indexOf(userName) == '-1') {
             usersInfo.push(userName);
-            roomInfo.push({
-                userName: userName,
-                toUserName: false,
-                msg: '加入了房间',
-            })
             io.sockets.emit('sys', usersInfo);
-            io.sockets.emit('msg', roomInfo, false);
+            // io.sockets.emit('msg', roomInfo);
             console.log(userName + '加入了', 'usersInfo', usersInfo);
         }
     });
+
+    socket.on('message', function(userName, toUserName, msg, nowState) {
+        io.emit('msg', userName, toUserName, msg, nowState);
+    });
+
 
     socket.on('leave', function() {
         socket.emit('disconnect');
@@ -116,47 +116,15 @@ io.on('connection', function(socket) {
         }
         // socket.leave(roomID);
         console.log(roomInfo);
-        roomInfo.push({
-            userName: user,
-            toUserName: false,
-            msg: '退出了房间'
-        });
-        io.emit('msg', roomInfo);
+        // roomInfo.push({
+        //     userName: user,
+        //     toUserName: false,
+        //     msg: '退出了房间'
+        // });
+        // io.emit('msg', roomInfo);
         io.emit('sys', usersInfo)
         console.log(user + '退出了');
     });
-
-    socket.on('message', function(userName, toUserName, msg, currentRoom) {
-        // if (roomInfo.indexOf(userName) === 0) {
-        //     return false;
-        // }
-        // roomInfo.userName = userName;
-        // roomInfo.toUserName = toUserName;
-        // roomInfo.msg = msg;
-        console.log('currentRoom', currentRoom);
-        roomInfo.push({
-            userName,
-            toUserName,
-            msg
-        });
-        if (toUserName) {
-            var toTarget = arrAllSocket[toUserName];
-            var target = arrAllSocket[userName];
-            console.log('私聊的人', toUserName);
-            console.log('筛选后的值', roomInfo, currentRoom);
-            toTarget.emit('msg', roomInfo, currentRoom);
-            target.emit('msg', roomInfo, currentRoom);
-            console.log('private');
-        } else {
-            console.log('roomInfo:', roomInfo, currentRoom);
-            io.emit('msg', roomInfo, currentRoom);
-        }
-    });
-
-    // socket.on('state', function(currentRoom) {
-    //     roomInfo.push(currentRoom);
-    //     console.log('state', roomInfo);
-    // })
 
     socket.on('private', function(name) {
         console.log(name);

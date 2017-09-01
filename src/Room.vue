@@ -1,15 +1,15 @@
 <template>
   <div class="chat">
-    <div class="chat-title">聊天室</div>
+    <!-- <div class="chat-title">聊天室</div> -->
     <el-row :gutter="24">
         <el-col :span="5">
             <div class="chat-info">
-              <button class="btn chat-btn" @click.once="group()">群聊大厅</button>
+              <button class="btn chat-btn" @click="group()">群聊大厅</button>
               <div>昵称: {{userName}}</div>
               <div>当前在线人数: {{usersInfo.length}}</div>
               <el-menu mode="vertical" default-active="1" class="el-menu-vertical-demo">
                 <el-menu-item-group title="用户列表">
-                  <el-menu-item index="1" v-for="user in usersInfo" @click="private(user)"><span v-if="user == currentRoom"><i class="el-icon-message"></i></span>{{user}}</el-menu-item>
+                  <el-menu-item index="1" v-for="user in usersInfo" @click="private(user)"><i class="el-icon-message"></i>{{user}}</el-menu-item>
                 </el-menu-item-group>
               </el-menu> 
               <button @click="leave(userName)" class="btn leave-btn">退出房间</button>
@@ -18,7 +18,11 @@
         <el-col :span="19">
             <div class="chatArea">
                 <ul class="messages">
-                  <li v-for="message in roomInfo">name:{{message.userName}}, touserName: {{message.toUserName}}, msg: {{message.msg}}</li>
+                  <li v-for="message in userList">
+                    <span v-if="message.name == nowState">
+                      name:{{message.from}}, touserName: {{message.to}}, msg: {{message.msg}}
+                    </span>
+                  </li>
                 </ul>
             </div>
             <textarea class="inputMessage" v-model="msg" @keyup.enter="submit" placeholder="Type here..." />
@@ -36,12 +40,17 @@ export default {
     return {
       message: '',
       usersInfo: '',
-      roomInfo: '',
+      userList: [
+        {
+          name: 'group',
+          msgList: [''],
+        }
+      ],
       userName: '',
       msg: '',
       toUserName: false,
       socket: '',
-      currentRoom: false,
+      nowState: 'group',
     }
   },
   watch: {
@@ -60,23 +69,32 @@ export default {
     this.socket.on('connect', () => {
       this.socket.emit('join', this.userName);
     });
-    this.socket.on('msg', (roomInfo, currentRoom) => {
-      let filterInfo;
-      console.log('currentRoom', currentRoom, 'this.currentRoom', this.currentRoom);
-      if (currentRoom === this.currentRoom && this.currentRoom) {
-        filterInfo = roomInfo.filter((obj) => {
-          return (obj.userName == this.toUserName && obj.toUserName == this.userName) || (obj.userName == this.userName && obj.toUserName == this.toUserName) && (this.toUserName);
+    this.socket.on('msg', (userName, toUserName, msg, nowState) => {
+      let flag;
+      this.userList.map((item, index) => {
+        if (item.name == toUserName) {
+          flag = true;
+          item.msgList.push({
+            from: userName,
+            to: toUserName,
+            msg: msg,
+          });
+        }
+      });
+      if (!flag) {
+        this.userList.push({
+          name: toUserName,
+          msgList: {
+            from: userName,
+            to: toUserName,
+            msg: msg,
+          }
         });
-        console.log('private');
-        this.roomInfo = filterInfo;
-      } else {
-        console.log('roomInfo', roomInfo);
-         filterInfo = roomInfo.filter((obj) => {
-          return (obj.toUserName == false);
-        });
-        console.log('filterInfo', filterInfo);
-        this.roomInfo = filterInfo;
-      }
+      };
+      console.log(this.userList)      
+      // if (nowState == this.nowState) {
+        
+      // }
     });
     this.socket.on('sys', (usersInfo) => {
       this.usersInfo = usersInfo;
@@ -96,24 +114,15 @@ export default {
     },
     submit() {
       console.log('submit');
-      this.socket.emit('message', this.userName, this.toUserName, this.msg, this.currentRoom);      
+      this.socket.emit('message', this.userName, this.toUserName, this.msg, this.nowState);
+      this.msg = '';
     },
     private(user) {
-      this.currentRoom = user;
-      // this.socket.emit('state', this.currentRoom);
-      // console.log('私聊roomInfo', this.roomInfo);
+      this.nowState = user;
       this.toUserName = user;
-      // var filterInfo = this.roomInfo.filter((obj) => {
-      //   return (obj.userName == this.toUserName && obj.toUserName == this.userName) || (obj.userName == this.userName && obj.toUserName == this.toUserName) && (this.toUserName);
-      // });
-      // this.roomInfo = filterInfo;
-      // console.log('filterInfo', filterInfo);
-      // this.$router.push({name: 'room', params: {nameId: user}}); 
-      this.socket.emit('message', this.userName, this.toUserName, this.msg, this.currentRoom);            
     },
     group() {
-      this.toUserName = false;
-      //this.socket.emit('message', this.userName, false, this.msg);
+      this.toUserName = 'group';
     }
   }
 }
