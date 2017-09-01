@@ -24,6 +24,7 @@ body {
 ul {
   list-style: none;
   word-wrap: break-word;
+  padding-left: 0;
 }
 
 
@@ -40,6 +41,8 @@ ul {
   height: 100%;
   position: absolute;
   width: 100%;
+  // margin: 30px;
+  // border: 1px solid #ddd;
 }
 
 
@@ -93,6 +96,10 @@ ul {
 // .chat.page {
 //   display: none;
 // }
+.chat {
+  padding: 0 12px;
+  height: 100%;
+}
 
 
 /* Font */
@@ -117,7 +124,7 @@ ul {
 
 .chatArea {
   height: 100%;
-  padding-bottom: 60px;
+  padding-bottom: 120px;
 }
 
 .messages {
@@ -149,13 +156,12 @@ ul {
 .inputMessage {
   border: 10px solid #000;
   bottom: 0;
-  height: 60px;
-  left: 0;
+  height: 120px;
+  left: -6px;
   outline: none;
   padding-left: 10px;
   position: absolute;
-  right: 0;
-  width: 100%;
+  width:100%;
 }
 
 .chat-title {
@@ -167,10 +173,11 @@ ul {
 
 .chat-info {
   position: relative;
-  padding: 10px 0;
-  margin: 0 20px;
+  padding: 20px 0;
+  // margin: 0 20px;
   border-right: 1px solid darkseagreen;
   height: 100%;
+  background: #eef1f6;
 }
 
 .chat-info span {
@@ -212,5 +219,15 @@ ul {
 .row,
 .col-md-3,
 .col-md-9 {
+  height: 100%;
+}
+
+.btn {
+  background: #fff;
+  border: 1px solid darkseagreen;
+  color: darkgreen;
+}
+
+#app {
   height: 100%;
 }

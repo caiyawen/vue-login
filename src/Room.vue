@@ -1,27 +1,27 @@
 <template>
-  <div class="chat page">
+  <div class="chat">
     <div class="chat-title">聊天室</div>
     <el-row :gutter="24">
-        <el-col :span="8">
+        <el-col :span="5">
             <div class="chat-info">
-                 <!-- <div>昵称: {{userName}}<div>  -->
-                <!-- <div>房间: </div> -->
-                <div>当前在线人数: <span id="count">{{users.length}}</span></div>
-                <div>用户列表:
-                    <ul v-for="user in users">
-                      <li>{user}<button>私聊</button></li>
-                    </ul>
-                </div>
-                <button @click="leave" class="btn chat-btn">退出房间</button>
+              <button class="btn chat-btn" @click.once="group()">群聊大厅</button>
+              <div>昵称: {{userName}}</div>
+              <div>当前在线人数: {{usersInfo.length}}</div>
+              <el-menu mode="vertical" default-active="1" class="el-menu-vertical-demo">
+                <el-menu-item-group title="用户列表">
+                  <el-menu-item index="1" v-for="user in usersInfo" @click="private(user)"><span v-if="user == currentRoom"><i class="el-icon-message"></i></span>{{user}}</el-menu-item>
+                </el-menu-item-group>
+              </el-menu> 
+              <button @click="leave(userName)" class="btn leave-btn">退出房间</button>
             </div>
         </el-col>
-        <el-col :span="16">
+        <el-col :span="19">
             <div class="chatArea">
                 <ul class="messages">
-                  {{message}}
+                  <li v-for="message in roomInfo">name:{{message.userName}}, touserName: {{message.toUserName}}, msg: {{message.msg}}</li>
                 </ul>
             </div>
-            <input class="inputMessage" v-model="msg" @keyup.enter="submit" placeholder="Type here..." />
+            <textarea class="inputMessage" v-model="msg" @keyup.enter="submit" placeholder="Type here..." />
         </el-col>
     </el-row>
   </div>
@@ -35,10 +35,21 @@ export default {
   data() {
     return {
       message: '',
-      users: '',
+      usersInfo: '',
+      roomInfo: '',
       userName: '',
       msg: '',
       toUserName: false,
+      socket: '',
+      currentRoom: false,
+    }
+  },
+  watch: {
+    usersInfo: {
+      handler: function(val) {
+        console.log(val);
+      },
+      deep: true
     }
   },
   created() {
@@ -46,38 +57,63 @@ export default {
     this.userName = this.$cookie.get('userName');
     let password = this.$cookie.get('password');    
     console.log('userName', this.userName, 'password', password);
-    let self = this;
-    this.socket.on('connect', function() {
-      self.socket.emit('join', self.userName);
+    this.socket.on('connect', () => {
+      this.socket.emit('join', this.userName);
     });
-    this.socket.on('msg', function(userName, toUserName, msg) {
-        this.message = '' +
-            '<div class="message">' +
-            '  <span class="user">' + userName + ': </span>' +
-            '  <span class="msg">' + msg + '</span>' +
-            '</div>';
-        // $('#msglog').scrollTop($('#msglog')[0].scrollHeight);
+    this.socket.on('msg', (roomInfo, currentRoom) => {
+      let filterInfo;
+      console.log('currentRoom', currentRoom, 'this.currentRoom', this.currentRoom);
+      if (currentRoom === this.currentRoom && this.currentRoom) {
+        filterInfo = roomInfo.filter((obj) => {
+          return (obj.userName == this.toUserName && obj.toUserName == this.userName) || (obj.userName == this.userName && obj.toUserName == this.toUserName) && (this.toUserName);
+        });
+        console.log('private');
+        this.roomInfo = filterInfo;
+      } else {
+        console.log('roomInfo', roomInfo);
+         filterInfo = roomInfo.filter((obj) => {
+          return (obj.toUserName == false);
+        });
+        console.log('filterInfo', filterInfo);
+        this.roomInfo = filterInfo;
+      }
     });
-    this.socket.on('sys', function(sysMsg, users) {
-        this.message = '<div class="sysMsg">' + sysMsg + '</div>';
-        // $('#msglog').append(message);
-        this.users = users;
-        // $('#count').text(users.length);
-        // $('#users').text('');
-        // todo 按名字排序
-        // users.map((val) => {
-        //     $('#users').append(`<li>${val}</li><button id="${val}" class="private-chat">私聊</button`);
-        // })
+    this.socket.on('sys', (usersInfo) => {
+      this.usersInfo = usersInfo;
+      console.log('usersInfo', this.usersInfo);
     });
+    this.socket.on('disconnect', () => {
+      console.log('disconnect');
+    })
   },
   methods: {
     leave() {
-      console.log('leave')
+      console.log('leave');
       this.socket.emit('leave');
+      this.$cookie.delete('userName');
+      this.$cookie.delete('password');      
+      this.$router.push({name: 'login'});      
     },
     submit() {
       console.log('submit');
-      this.socket.emit('message', this.userName, this.toUserName, this.msg);
+      this.socket.emit('message', this.userName, this.toUserName, this.msg, this.currentRoom);      
+    },
+    private(user) {
+      this.currentRoom = user;
+      // this.socket.emit('state', this.currentRoom);
+      // console.log('私聊roomInfo', this.roomInfo);
+      this.toUserName = user;
+      // var filterInfo = this.roomInfo.filter((obj) => {
+      //   return (obj.userName == this.toUserName && obj.toUserName == this.userName) || (obj.userName == this.userName && obj.toUserName == this.toUserName) && (this.toUserName);
+      // });
+      // this.roomInfo = filterInfo;
+      // console.log('filterInfo', filterInfo);
+      // this.$router.push({name: 'room', params: {nameId: user}}); 
+      this.socket.emit('message', this.userName, this.toUserName, this.msg, this.currentRoom);            
+    },
+    group() {
+      this.toUserName = false;
+      //this.socket.emit('message', this.userName, false, this.msg);
     }
   }
 }
@@ -86,6 +122,14 @@ export default {
 <style lang="less">
 .el-row, .el-col {
   height: 100%;
+  position: relative;
+}
+.leave-btn {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  margin-left: -29px;
+  text-align: center;
 }
 </style>
 

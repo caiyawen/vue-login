@@ -8,6 +8,7 @@ var mysql = require('mysql');
 var bodyParser = require('body-parser');
 var server = require('http').createServer(App);
 var io = require('socket.io')(server);
+var usersInfo = [];
 var roomInfo = [];
 var arrAllSocket = [];
 
@@ -46,7 +47,6 @@ var connection = initializeConnection({
     database: 'test-database'
 });
 
-//第二次请求有问题
 App.post('/login', function(req, res) {
     // connection.connect();
     // console.log(JSON.stringify(req.body));
@@ -86,18 +86,20 @@ io.on('connection', function(socket) {
 
     socket.on('join', function(userName) {
         console.log(userName);
+        console.log(userName !== null && usersInfo.indexOf(userName) == '-1');
         user = userName;
-        // roomID = obj.roomID;
         arrAllSocket[user] = socket;
-        // if (!roomInfo[roomID]) {
-        //     roomInfo[roomID] = [];
-        // }
-        // roomInfo[roomID].push(user);
-        roomInfo.push(user);
-        // socket.join(roomID);
-        // io.to(roomID).emit('sys', user + '加入了房间', roomInfo[roomID]);
-        io.emit('sys', user + '加入了房间');
-        console.log(user + '加入了');
+        if (userName !== null && usersInfo.indexOf(userName) == '-1') {
+            usersInfo.push(userName);
+            roomInfo.push({
+                userName: userName,
+                toUserName: false,
+                msg: '加入了房间',
+            })
+            io.sockets.emit('sys', usersInfo);
+            io.sockets.emit('msg', roomInfo, false);
+            console.log(userName + '加入了', 'usersInfo', usersInfo);
+        }
     });
 
     socket.on('leave', function() {
@@ -106,31 +108,55 @@ io.on('connection', function(socket) {
     });
 
     socket.on('disconnect', function() {
-        var index = roomInfo.indexOf(user);
+        console.log(user);
+        var index = usersInfo.indexOf(user);
         if (index !== -1) {
-            roomInfo.splice(index, 1);
+            console.log('用户已存在');
+            usersInfo.splice(index, 1);
         }
         // socket.leave(roomID);
-        io.emit('sys', user + '退出了房间');
+        console.log(roomInfo);
+        roomInfo.push({
+            userName: user,
+            toUserName: false,
+            msg: '退出了房间'
+        });
+        io.emit('msg', roomInfo);
+        io.emit('sys', usersInfo)
         console.log(user + '退出了');
     });
 
-    socket.on('message', function(userName, toUserName, msg) {
-        if (roomInfo.indexOf(userName) === -1) {
-            return false;
-        }
-        console.log('userName', userName, 'toUserName', toUserName, 'msg', msg);
+    socket.on('message', function(userName, toUserName, msg, currentRoom) {
+        // if (roomInfo.indexOf(userName) === 0) {
+        //     return false;
+        // }
+        // roomInfo.userName = userName;
+        // roomInfo.toUserName = toUserName;
+        // roomInfo.msg = msg;
+        console.log('currentRoom', currentRoom);
+        roomInfo.push({
+            userName,
+            toUserName,
+            msg
+        });
         if (toUserName) {
             var toTarget = arrAllSocket[toUserName];
             var target = arrAllSocket[userName];
-            console.log(target);
-            toTarget.emit('msg', userName, toUserName, msg);
-            target.emit('msg', userName, toUserName, msg);
+            console.log('私聊的人', toUserName);
+            console.log('筛选后的值', roomInfo, currentRoom);
+            toTarget.emit('msg', roomInfo, currentRoom);
+            target.emit('msg', roomInfo, currentRoom);
             console.log('private');
-            return;
+        } else {
+            console.log('roomInfo:', roomInfo, currentRoom);
+            io.emit('msg', roomInfo, currentRoom);
         }
-        io.emit('msg', userName, toUserName, msg);
     });
+
+    // socket.on('state', function(currentRoom) {
+    //     roomInfo.push(currentRoom);
+    //     console.log('state', roomInfo);
+    // })
 
     socket.on('private', function(name) {
         console.log(name);

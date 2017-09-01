@@ -15381,22 +15381,22 @@ _vue2.default.use(_vueCookie2.default);
 _vue2.default.use(_elementUi2.default);
 // Vue.use(Axios);
 
-window.bus = new _vue2.default();
+// window.bus = new Vue();
 
 var router = new _vueRouter2.default({
     routes: _router2.default
 });
 
-// router.beforeEach((to, from, next) => {
-//     var isLogin = Vue.cookie.get('username');
-//     var toPage = to.name;
-//     console.log(isLogin, toPage)
-//     if (!isLogin && toPage !== 'login') {
-//         next('/login');
-//         return;
-//     }
-//     next();
-// })
+router.beforeEach(function (to, from, next) {
+    var isLogin = _vue2.default.cookie.get('userName');
+    var toPage = to.name;
+    console.log(isLogin, toPage);
+    if (!isLogin && toPage !== 'login') {
+        next('/login');
+        return;
+    }
+    next();
+});
 
 new _vue2.default({
     el: '#app',
@@ -57375,7 +57375,7 @@ exports = module.exports = __webpack_require__(108)(undefined);
 
 
 // module
-exports.push([module.i, "/* Fix user-agent */\n* {\n  box-sizing: border-box;\n}\nhtml {\n  font-weight: 300;\n  -webkit-font-smoothing: antialiased;\n}\nhtml,\ninput {\n  font-family: \"HelveticaNeue-Light\", \"Helvetica Neue Light\", \"Helvetica Neue\", Helvetica, Arial, \"Lucida Grande\", sans-serif;\n}\nhtml,\nbody {\n  height: 100%;\n  margin: 0;\n  padding: 0;\n}\nul {\n  list-style: none;\n  word-wrap: break-word;\n}\n/* Pages */\n.pages {\n  height: 100%;\n  margin: 0;\n  padding: 0;\n  width: 100%;\n}\n.page {\n  height: 100%;\n  position: absolute;\n  width: 100%;\n}\n/* Login Page */\n.login.page {\n  background-color: darkseagreen;\n}\n.login.page .login-logo {\n  height: 100px;\n  margin-bottom: 80px;\n}\n.login.page .form {\n  height: 100px;\n  position: absolute;\n  text-align: center;\n  top: 15%;\n  width: 100%;\n}\n.login.page .form .usernameInput {\n  background-color: transparent;\n  border: none;\n  border-bottom: 2px solid #fff;\n  outline: none;\n  padding-bottom: 15px;\n  text-align: center;\n  width: 400px;\n}\n.login.page .title {\n  font-size: 200%;\n}\n.login.page .usernameInput {\n  font-size: 200%;\n  letter-spacing: 3px;\n}\n.login.page .title,\n.login.page .usernameInput {\n  color: #fff;\n  font-weight: 100;\n}\n/* Chat page */\n/* Font */\n.messages {\n  font-size: 120%;\n}\n.inputMessage {\n  font-size: 100%;\n}\n.log {\n  color: gray;\n  font-size: 70%;\n  margin: 5px;\n  text-align: center;\n}\n/* Messages */\n.chatArea {\n  height: 100%;\n  padding-bottom: 60px;\n}\n.messages {\n  height: 100%;\n  margin: 0;\n  overflow-y: scroll;\n  padding: 10px 20px 10px 20px;\n}\n.messages li {\n  padding: 4px 0;\n}\n.message.typing .messageBody {\n  color: gray;\n}\n.username {\n  font-weight: 700;\n  overflow: hidden;\n  padding-right: 15px;\n  text-align: right;\n  color: #f78b00;\n}\n/* Input */\n.inputMessage {\n  border: 10px solid #000;\n  bottom: 0;\n  height: 60px;\n  left: 0;\n  outline: none;\n  padding-left: 10px;\n  position: absolute;\n  right: 0;\n  width: 100%;\n}\n.chat-title {\n  font-size: 24px;\n  color: #313131;\n  margin: 15px 0;\n  text-align: center;\n}\n.chat-info {\n  position: relative;\n  padding: 10px 0;\n  margin: 0 20px;\n  border-right: 1px solid darkseagreen;\n  height: 100%;\n}\n.chat-info span {\n  margin-right: 10px;\n}\n.chat-info .chat-btn {\n  position: absolute;\n  right: 20px;\n  top: 5px;\n}\n.chat-btn {\n  background: #fff;\n  border: 1px solid darkseagreen;\n  color: darkgreen;\n}\n.enter-btn {\n  padding-top: 20px;\n}\n.message-right {\n  text-align: right;\n}\n.message-right .username {\n  padding-right: 0;\n  padding-left: 15px;\n  color: #287b00;\n}\n.message-time {\n  font-size: 14px;\n  color: #616161;\n  padding: 4px 0;\n}\n.row,\n.col-md-3,\n.col-md-9 {\n  height: 100%;\n}\n", ""]);
+exports.push([module.i, "/* Fix user-agent */\n* {\n  box-sizing: border-box;\n}\nhtml {\n  font-weight: 300;\n  -webkit-font-smoothing: antialiased;\n}\nhtml,\ninput {\n  font-family: \"HelveticaNeue-Light\", \"Helvetica Neue Light\", \"Helvetica Neue\", Helvetica, Arial, \"Lucida Grande\", sans-serif;\n}\nhtml,\nbody {\n  height: 100%;\n  margin: 0;\n  padding: 0;\n}\nul {\n  list-style: none;\n  word-wrap: break-word;\n  padding-left: 0;\n}\n/* Pages */\n.pages {\n  height: 100%;\n  margin: 0;\n  padding: 0;\n  width: 100%;\n}\n.page {\n  height: 100%;\n  position: absolute;\n  width: 100%;\n}\n/* Login Page */\n.login.page {\n  background-color: darkseagreen;\n}\n.login.page .login-logo {\n  height: 100px;\n  margin-bottom: 80px;\n}\n.login.page .form {\n  height: 100px;\n  position: absolute;\n  text-align: center;\n  top: 15%;\n  width: 100%;\n}\n.login.page .form .usernameInput {\n  background-color: transparent;\n  border: none;\n  border-bottom: 2px solid #fff;\n  outline: none;\n  padding-bottom: 15px;\n  text-align: center;\n  width: 400px;\n}\n.login.page .title {\n  font-size: 200%;\n}\n.login.page .usernameInput {\n  font-size: 200%;\n  letter-spacing: 3px;\n}\n.login.page .title,\n.login.page .usernameInput {\n  color: #fff;\n  font-weight: 100;\n}\n/* Chat page */\n.chat {\n  padding: 0 12px;\n  height: 100%;\n}\n/* Font */\n.messages {\n  font-size: 120%;\n}\n.inputMessage {\n  font-size: 100%;\n}\n.log {\n  color: gray;\n  font-size: 70%;\n  margin: 5px;\n  text-align: center;\n}\n/* Messages */\n.chatArea {\n  height: 100%;\n  padding-bottom: 120px;\n}\n.messages {\n  height: 100%;\n  margin: 0;\n  overflow-y: scroll;\n  padding: 10px 20px 10px 20px;\n}\n.messages li {\n  padding: 4px 0;\n}\n.message.typing .messageBody {\n  color: gray;\n}\n.username {\n  font-weight: 700;\n  overflow: hidden;\n  padding-right: 15px;\n  text-align: right;\n  color: #f78b00;\n}\n/* Input */\n.inputMessage {\n  border: 10px solid #000;\n  bottom: 0;\n  height: 120px;\n  left: -6px;\n  outline: none;\n  padding-left: 10px;\n  position: absolute;\n  width: 100%;\n}\n.chat-title {\n  font-size: 24px;\n  color: #313131;\n  margin: 15px 0;\n  text-align: center;\n}\n.chat-info {\n  position: relative;\n  padding: 20px 0;\n  border-right: 1px solid darkseagreen;\n  height: 100%;\n  background: #eef1f6;\n}\n.chat-info span {\n  margin-right: 10px;\n}\n.chat-info .chat-btn {\n  position: absolute;\n  right: 20px;\n  top: 5px;\n}\n.chat-btn {\n  background: #fff;\n  border: 1px solid darkseagreen;\n  color: darkgreen;\n}\n.enter-btn {\n  padding-top: 20px;\n}\n.message-right {\n  text-align: right;\n}\n.message-right .username {\n  padding-right: 0;\n  padding-left: 15px;\n  color: #287b00;\n}\n.message-time {\n  font-size: 14px;\n  color: #616161;\n  padding: 4px 0;\n}\n.row,\n.col-md-3,\n.col-md-9 {\n  height: 100%;\n}\n.btn {\n  background: #fff;\n  border: 1px solid darkseagreen;\n  color: darkgreen;\n}\n#app {\n  height: 100%;\n}\n", ""]);
 
 // exports
 
@@ -60138,6 +60138,14 @@ var _Room = __webpack_require__(427);
 
 var _Room2 = _interopRequireDefault(_Room);
 
+var _Group = __webpack_require__(499);
+
+var _Group2 = _interopRequireDefault(_Group);
+
+var _Private = __webpack_require__(498);
+
+var _Private2 = _interopRequireDefault(_Private);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var routes = [{
@@ -60147,7 +60155,16 @@ var routes = [{
 }, {
     path: '/room',
     component: _Room2.default,
-    name: 'room'
+    name: 'room',
+    childen: [{
+        path: 'group',
+        component: _Group2.default,
+        name: 'group'
+    }, {
+        path: 'private/:nameId',
+        component: _Private2.default,
+        name: 'private'
+    }]
 }];
 
 exports.default = routes;
@@ -60242,7 +60259,7 @@ exports = module.exports = __webpack_require__(108)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Login Page */\n.login.page {\n  background-color: darkseagreen;\n}\n.login-logo {\n    height: 100px;\n    /* background: url(../img/wochat.png) no-repeat center; */\n    margin-bottom: 30px;\n}\n.login.page .form {\n  height: 100px;\n  position: absolute;\n  text-align: center;\n  top: 15%;\n  width: 100%;\n}\n.login.page .form .usernameInput {\n  background-color: transparent;\n  border: none;\n  border-bottom: 2px solid #fff;\n  outline: none;\n  padding-bottom: 15px;\n  text-align: center;\n  width: 400px;\n}\n.login.page .title {\n  font-size: 150%;\n}\n.login.page .usernameInput {\n  font-size: 150%;\n  letter-spacing: 3px;\n}\n.login.page .title,\n.login.page .usernameInput {\n  color: #fff;\n  font-weight: 100;\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Login Page */\n.login.page {\n  background-color: darkseagreen;\n}\n.login-logo {\n    height: 100px;\n     /* background: url(../img/wochat.png) no-repeat center;  */\n    margin-bottom: 30px;\n}\n.login.page .form {\n  height: 100px;\n  position: absolute;\n  text-align: center;\n  top: 15%;\n  width: 100%;\n}\n.login.page .form .usernameInput {\n  background-color: transparent;\n  border: none;\n  border-bottom: 2px solid #fff;\n  outline: none;\n  padding-bottom: 15px;\n  text-align: center;\n  width: 400px;\n}\n.login.page .title {\n  font-size: 150%;\n}\n.login.page .usernameInput {\n  font-size: 150%;\n  letter-spacing: 3px;\n}\n.login.page .title,\n.login.page .usernameInput {\n  color: #fff;\n  font-weight: 100;\n}\n", ""]);
 
 // exports
 
@@ -60257,10 +60274,6 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-//
-//
-//
-//
 //
 //
 //
@@ -60319,9 +60332,7 @@ exports.default = {
 
 "use strict";
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('ul', {
-    staticClass: "pages"
-  }, [_c('li', {
+  return _c('div', {
     staticClass: "login page"
   }, [_c('div', {
     staticClass: "form"
@@ -60382,7 +60393,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     on: {
       "click": _vm.login
     }
-  }, [_vm._v("进入聊天室")])])])])])])
+  }, [_vm._v("进入聊天室")])])])])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -60472,35 +60483,58 @@ exports.default = {
   data: function data() {
     return {
       message: '',
-      users: '',
+      usersInfo: '',
+      roomInfo: '',
       userName: '',
       msg: '',
-      toUserName: false
+      toUserName: false,
+      socket: '',
+      currentRoom: false
     };
   },
+
+  watch: {
+    usersInfo: {
+      handler: function handler(val) {
+        console.log(val);
+      },
+      deep: true
+    }
+  },
   created: function created() {
+    var _this = this;
+
     this.socket = _socket2.default.connect('127.0.0.1:8099');
     this.userName = this.$cookie.get('userName');
     var password = this.$cookie.get('password');
     console.log('userName', this.userName, 'password', password);
-    var self = this;
     this.socket.on('connect', function () {
-      self.socket.emit('join', self.userName);
+      _this.socket.emit('join', _this.userName);
     });
-    this.socket.on('msg', function (userName, toUserName, msg) {
-      this.message = '' + '<div class="message">' + '  <span class="user">' + userName + ': </span>' + '  <span class="msg">' + msg + '</span>' + '</div>';
-      // $('#msglog').scrollTop($('#msglog')[0].scrollHeight);
+    this.socket.on('msg', function (roomInfo, currentRoom) {
+      var filterInfo = void 0;
+      console.log('currentRoom', currentRoom, 'this.currentRoom', _this.currentRoom);
+      if (currentRoom === _this.currentRoom && _this.currentRoom) {
+        filterInfo = roomInfo.filter(function (obj) {
+          return obj.userName == _this.toUserName && obj.toUserName == _this.userName || obj.userName == _this.userName && obj.toUserName == _this.toUserName && _this.toUserName;
+        });
+        console.log('private');
+        _this.roomInfo = filterInfo;
+      } else {
+        console.log('roomInfo', roomInfo);
+        filterInfo = roomInfo.filter(function (obj) {
+          return obj.toUserName == false;
+        });
+        console.log('filterInfo', filterInfo);
+        _this.roomInfo = filterInfo;
+      }
     });
-    this.socket.on('sys', function (sysMsg, users) {
-      this.message = '<div class="sysMsg">' + sysMsg + '</div>';
-      // $('#msglog').append(message);
-      this.users = users;
-      // $('#count').text(users.length);
-      // $('#users').text('');
-      // todo 按名字排序
-      // users.map((val) => {
-      //     $('#users').append(`<li>${val}</li><button id="${val}" class="private-chat">私聊</button`);
-      // })
+    this.socket.on('sys', function (usersInfo) {
+      _this.usersInfo = usersInfo;
+      console.log('usersInfo', _this.usersInfo);
+    });
+    this.socket.on('disconnect', function () {
+      console.log('disconnect');
     });
   },
 
@@ -60508,10 +60542,30 @@ exports.default = {
     leave: function leave() {
       console.log('leave');
       this.socket.emit('leave');
+      this.$cookie.delete('userName');
+      this.$cookie.delete('password');
+      this.$router.push({ name: 'login' });
     },
     submit: function submit() {
       console.log('submit');
-      this.socket.emit('message', this.userName, this.toUserName, this.msg);
+      this.socket.emit('message', this.userName, this.toUserName, this.msg, this.currentRoom);
+    },
+    private: function _private(user) {
+      this.currentRoom = user;
+      // this.socket.emit('state', this.currentRoom);
+      // console.log('私聊roomInfo', this.roomInfo);
+      this.toUserName = user;
+      // var filterInfo = this.roomInfo.filter((obj) => {
+      //   return (obj.userName == this.toUserName && obj.toUserName == this.userName) || (obj.userName == this.userName && obj.toUserName == this.toUserName) && (this.toUserName);
+      // });
+      // this.roomInfo = filterInfo;
+      // console.log('filterInfo', filterInfo);
+      // this.$router.push({name: 'room', params: {nameId: user}}); 
+      this.socket.emit('message', this.userName, this.toUserName, this.msg, this.currentRoom);
+    },
+    group: function group() {
+      this.toUserName = false;
+      //this.socket.emit('message', this.userName, false, this.msg);
     }
   }
 }; //
@@ -60551,7 +60605,7 @@ exports.default = {
 "use strict";
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "chat page"
+    staticClass: "chat"
   }, [_c('div', {
     staticClass: "chat-title"
   }, [_vm._v("聊天室")]), _vm._v(" "), _c('el-row', {
@@ -60560,30 +60614,58 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     }
   }, [_c('el-col', {
     attrs: {
-      "span": 8
+      "span": 5
     }
   }, [_c('div', {
     staticClass: "chat-info"
-  }, [_c('div', [_vm._v("当前在线人数: "), _c('span', {
-    attrs: {
-      "id": "count"
-    }
-  }, [_vm._v(_vm._s(_vm.users.length))])]), _vm._v(" "), _c('div', [_vm._v("用户列表:\n                  "), _vm._l((_vm.users), function(user) {
-    return _c('ul', [_c('li', [_vm._v("{user}"), _c('button', [_vm._v("私聊")])])])
-  })], 2), _vm._v(" "), _c('button', {
+  }, [_c('button', {
     staticClass: "btn chat-btn",
     on: {
-      "click": _vm.leave
+      "~click": function($event) {
+        _vm.group()
+      }
     }
-  }, [_vm._v("退出房间")])])]), _vm._v(" "), _c('el-col', {
+  }, [_vm._v("群聊大厅")]), _vm._v(" "), _c('div', [_vm._v("昵称: " + _vm._s(_vm.userName))]), _vm._v(" "), _c('div', [_vm._v("当前在线人数: " + _vm._s(_vm.usersInfo.length))]), _vm._v(" "), _c('el-menu', {
+    staticClass: "el-menu-vertical-demo",
     attrs: {
-      "span": 16
+      "mode": "vertical",
+      "default-active": "1"
+    }
+  }, [_c('el-menu-item-group', {
+    attrs: {
+      "title": "用户列表"
+    }
+  }, _vm._l((_vm.usersInfo), function(user) {
+    return _c('el-menu-item', {
+      attrs: {
+        "index": "1"
+      },
+      on: {
+        "click": function($event) {
+          _vm.private(user)
+        }
+      }
+    }, [(user == _vm.currentRoom) ? _c('span', [_c('i', {
+      staticClass: "el-icon-message"
+    })]) : _vm._e(), _vm._v(_vm._s(user))])
+  }))], 1), _vm._v(" "), _c('button', {
+    staticClass: "btn leave-btn",
+    on: {
+      "click": function($event) {
+        _vm.leave(_vm.userName)
+      }
+    }
+  }, [_vm._v("退出房间")])], 1)]), _vm._v(" "), _c('el-col', {
+    attrs: {
+      "span": 19
     }
   }, [_c('div', {
     staticClass: "chatArea"
   }, [_c('ul', {
     staticClass: "messages"
-  }, [_vm._v("\n                " + _vm._s(_vm.message) + "\n              ")])]), _vm._v(" "), _c('input', {
+  }, _vm._l((_vm.roomInfo), function(message) {
+    return _c('li', [_vm._v("name:" + _vm._s(message.userName) + ", touserName: " + _vm._s(message.toUserName) + ", msg: " + _vm._s(message.msg))])
+  }))]), _vm._v(" "), _c('textarea', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -61744,7 +61826,7 @@ exports = module.exports = __webpack_require__(108)(undefined);
 
 
 // module
-exports.push([module.i, "\n.el-row,\n.el-col {\n  height: 100%;\n}\n", ""]);
+exports.push([module.i, "\n.el-row,\n.el-col {\n  height: 100%;\n  position: relative;\n}\n.leave-btn {\n  position: absolute;\n  bottom: 100px;\n  left: 50%;\n  margin-left: -29px;\n  text-align: center;\n}\n", ""]);
 
 // exports
 
@@ -68156,6 +68238,150 @@ Backoff.prototype.setJitter = function(jitter){
 };
 
 
+
+/***/ }),
+/* 498 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_13_0_4_vue_loader_lib_template_compiler_index_id_data_v_2cffb891_hasScoped_false_node_modules_vue_loader_13_0_4_vue_loader_lib_selector_type_template_index_0_Private_vue__ = __webpack_require__(501);
+var disposed = false
+var normalizeComponent = __webpack_require__(73)
+/* script */
+var __vue_script__ = null
+/* template */
+
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_13_0_4_vue_loader_lib_template_compiler_index_id_data_v_2cffb891_hasScoped_false_node_modules_vue_loader_13_0_4_vue_loader_lib_selector_type_template_index_0_Private_vue__["a" /* default */],
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/Private.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Private.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-loader/node_modules/vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-2cffb891", Component.options)
+  } else {
+    hotAPI.reload("data-v-2cffb891", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 499 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_13_0_4_vue_loader_lib_template_compiler_index_id_data_v_a19e9de6_hasScoped_false_node_modules_vue_loader_13_0_4_vue_loader_lib_selector_type_template_index_0_Group_vue__ = __webpack_require__(500);
+var disposed = false
+var normalizeComponent = __webpack_require__(73)
+/* script */
+var __vue_script__ = null
+/* template */
+
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_13_0_4_vue_loader_lib_template_compiler_index_id_data_v_a19e9de6_hasScoped_false_node_modules_vue_loader_13_0_4_vue_loader_lib_selector_type_template_index_0_Group_vue__["a" /* default */],
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/Group.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Group.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-loader/node_modules/vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-a19e9de6", Component.options)
+  } else {
+    hotAPI.reload("data-v-a19e9de6", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 500 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('ul', {
+    staticClass: "messages"
+  }, _vm._l((_vm.roomInfo), function(message) {
+    return _c('li', [_vm._v("name:" + _vm._s(message.userName) + ", touserName: " + _vm._s(message.touserName) + ", msg: " + _vm._s(message.msg))])
+  }))
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-loader/node_modules/vue-hot-reload-api").rerender("data-v-a19e9de6", esExports)
+  }
+}
+
+/***/ }),
+/* 501 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('ul', {
+    staticClass: "messages"
+  }, _vm._l((_vm.roomInfo), function(message) {
+    return _c('li', [_vm._v("name:" + _vm._s(message.userName) + ", touserName: " + _vm._s(message.touserName) + ", msg: " + _vm._s(message.msg))])
+  }))
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-loader/node_modules/vue-hot-reload-api").rerender("data-v-2cffb891", esExports)
+  }
+}
 
 /***/ })
 /******/ ]);

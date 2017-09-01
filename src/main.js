@@ -18,22 +18,22 @@ Vue.use(VueCookie);
 Vue.use(ElementUI);
 // Vue.use(Axios);
 
-window.bus = new Vue();
+// window.bus = new Vue();
 
 const router = new VueRouter({
     routes
 });
 
-// router.beforeEach((to, from, next) => {
-//     var isLogin = Vue.cookie.get('username');
-//     var toPage = to.name;
-//     console.log(isLogin, toPage)
-//     if (!isLogin && toPage !== 'login') {
-//         next('/login');
-//         return;
-//     }
-//     next();
-// })
+router.beforeEach((to, from, next) => {
+    var isLogin = Vue.cookie.get('userName');
+    var toPage = to.name;
+    console.log(isLogin, toPage)
+    if (!isLogin && toPage !== 'login') {
+        next('/login');
+        return;
+    }
+    next();
+})
 
 new Vue({
     el: '#app',
