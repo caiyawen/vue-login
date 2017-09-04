@@ -63765,92 +63765,17 @@ exports.default = {
   name: 'room',
   data: function data() {
     return {
-      message: '',
-      usersInfo: '',
-      roomInfo: '',
-      userName: '',
       msg: '',
-      toUserName: false,
-      socket: '',
-      currentRoom: false,
       dialogVisible: false
     };
   },
 
-  watch: {
-    usersInfo: {
-      handler: function handler(val) {
-        console.log(val);
-      },
-      deep: true
-    }
-  },
+  watch: {},
   created: function created() {
-    var _this = this;
-
-    this.socket = _socket2.default.connect('127.0.0.1:8099');
-    this.userName = this.$cookie.get('userName');
-    var password = this.$cookie.get('password');
-    console.log('userName', this.userName, 'password', password);
-    this.socket.on('connect', function () {
-      _this.socket.emit('join', _this.userName);
+    _socket2.default.on('connect', function () {
+      _socket2.default.emit('user join', 'aaa');
+      console.log('connect');
     });
-    this.socket.on('msg', function (roomInfo, currentRoom) {
-      var filterInfo = void 0;
-      console.log('currentRoom', currentRoom, 'this.currentRoom', _this.currentRoom);
-      if (currentRoom === _this.currentRoom && _this.currentRoom) {
-        filterInfo = roomInfo.filter(function (obj) {
-          return obj.userName == _this.toUserName && obj.toUserName == _this.userName || obj.userName == _this.userName && obj.toUserName == _this.toUserName && _this.toUserName;
-        });
-        console.log('private');
-        _this.roomInfo = filterInfo;
-      } else {
-        console.log('roomInfo', roomInfo);
-        filterInfo = roomInfo.filter(function (obj) {
-          return obj.toUserName == false;
-        });
-        console.log('filterInfo', filterInfo);
-        _this.roomInfo = filterInfo;
-      }
-    });
-    this.socket.on('sys', function (usersInfo) {
-      _this.usersInfo = usersInfo;
-      console.log('usersInfo', _this.usersInfo);
-    });
-    this.socket.on('disconnect', function () {
-      console.log('disconnect');
-    });
-  },
-
-  methods: {
-    leave: function leave() {
-      console.log('leave');
-      this.socket.emit('leave');
-      this.$cookie.delete('userName');
-      this.$cookie.delete('password');
-      this.$router.push({ name: 'login' });
-    },
-    submit: function submit() {
-      console.log('submit');
-      this.socket.emit('message', this.userName, this.toUserName, this.msg, this.currentRoom);
-      this.msg = '';
-    },
-    private: function _private(user) {
-      this.currentRoom = user;
-      this.toUserName = user;
-      this.socket.emit('message', this.userName, this.toUserName, this.msg, this.currentRoom);
-    },
-    group: function group() {
-      this.toUserName = false;
-    },
-    sendFile: function sendFile(resNo) {
-      this.$router.push({
-        name: 'player',
-        params: {
-          id: resNo
-        }
-      });
-    }
   }
 }; //
 //
@@ -67072,13 +66997,8 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
   }, [_c('div', {
     staticClass: "chat-info"
   }, [_c('button', {
-    staticClass: "btn chat-btn",
-    on: {
-      "~click": function($event) {
-        _vm.group()
-      }
-    }
-  }, [_vm._v("群聊大厅")]), _vm._v(" "), _c('div', [_vm._v(" 昵称: " + _vm._s(_vm.userName))]), _vm._v(" "), _c('div', [_vm._v(" 当前在线人数: " + _vm._s(_vm.usersInfo.length))]), _vm._v(" "), _c('el-menu', {
+    staticClass: "btn chat-btn"
+  }, [_vm._v("群聊大厅")]), _vm._v(" "), _c('div', [_vm._v(" 昵称: ")]), _vm._v(" "), _c('div', [_vm._v(" 当前在线人数: ")]), _vm._v(" "), _c('el-menu', {
     staticClass: "el-menu-vertical-demo",
     attrs: {
       "mode": "vertical",
@@ -67088,26 +67008,8 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     attrs: {
       "title": "用户列表"
     }
-  }, _vm._l((_vm.usersInfo), function(user) {
-    return _c('el-menu-item', {
-      attrs: {
-        "index": "1"
-      },
-      on: {
-        "click": function($event) {
-          _vm.private(user)
-        }
-      }
-    }, [(user == _vm.currentRoom) ? _c('span', [_c('i', {
-      staticClass: "el-icon-message"
-    })]) : _vm._e(), _vm._v(_vm._s(user))])
-  }))], 1), _vm._v(" "), _c('button', {
-    staticClass: "btn leave-btn",
-    on: {
-      "click": function($event) {
-        _vm.leave(_vm.userName)
-      }
-    }
+  })], 1), _vm._v(" "), _c('button', {
+    staticClass: "btn leave-btn"
   }, [_vm._v("退出房间")])], 1)]), _vm._v(" "), _c('el-col', {
     attrs: {
       "span": 19
@@ -67116,21 +67018,9 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     staticClass: "chatArea"
   }, [_c('ul', {
     staticClass: "messages"
-  }, _vm._l((_vm.roomInfo), function(message) {
-    return _c('li', [_vm._v(_vm._s(message.userName) + " "), _c('span', {
-      staticClass: "chat-msg"
-    }, [_vm._v(_vm._s(message.msg))])])
-  }))]), _vm._v(" "), _c('div', {
+  })]), _vm._v(" "), _c('div', {
     staticClass: "file-box"
-  }, [_c('span', {
-    on: {
-      "click": function($event) {
-        _vm.dialogVisible = true
-      }
-    }
-  }, [_c('i', {
-    staticClass: "el-icon-message"
-  })])]), _vm._v(" "), _c('textarea', {
+  }), _vm._v(" "), _c('textarea', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -67145,10 +67035,6 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       "value": (_vm.msg)
     },
     on: {
-      "keyup": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13)) { return null; }
-        _vm.submit($event)
-      },
       "input": function($event) {
         if ($event.target.composing) { return; }
         _vm.msg = $event.target.value

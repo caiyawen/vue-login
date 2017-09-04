@@ -9,9 +9,6 @@ var bodyParser = require('body-parser');
 var server = require('http').createServer(App);
 var io = require('socket.io')(server);
 const QiQiuYun = require('qiqiuyun-sdk');
-var usersInfo = [];
-var roomInfo = [];
-var arrAllSocket = [];
 
 App.use(bodyParser.json());
 App.use(bodyParser.urlencoded({ extended: false }));
@@ -87,91 +84,16 @@ App.get('/play/token', function(req, res) {
 });
 
 //socket连接
+var users = [];
+usocket = {};
 io.on('connection', function(socket) {
-    console.log('connection');
-    var url = socket.request.headers.referer;
-    var roomID;
-    var user;
-    socket.on('join', function(userName) {
-        console.log(userName);
-        console.log(userName !== null && usersInfo.indexOf(userName) == '-1');
-        user = userName;
-        arrAllSocket[user] = socket;
-        if (userName !== null && usersInfo.indexOf(userName) == '-1') {
-            usersInfo.push(userName);
-            // roomInfo.push({
-            //     userName: userName,
-            //     toUserName: false,
-            //     msg: '加入了房间',
-            // })
-            io.sockets.emit('sys', usersInfo);
-            // io.sockets.emit('msg', roomInfo, false);
-            console.log(userName + '加入了', 'usersInfo', usersInfo);
-        }
-    });
-
-    socket.on('leave', function() {
-        socket.emit('disconnect');
-        console.log('disconnect');
-    });
-
-    socket.on('disconnect', function() {
-        console.log(user);
-        var index = usersInfo.indexOf(user);
-        if (index !== -1) {
-            console.log('用户已存在');
-            usersInfo.splice(index, 1);
-        }
-        // socket.leave(roomID);
-        console.log(roomInfo);
-        // roomInfo.push({
-        //     userName: user,
-        //     toUserName: false,
-        //     msg: '退出了房间'
-        // });
-        // io.emit('msg', roomInfo);
-        io.emit('sys', usersInfo)
-        console.log(user + '退出了');
-    });
-
-    socket.on('message', function(userName, toUserName, msg, currentRoom) {
-        // if (roomInfo.indexOf(userName) === 0) {
-        //     return false;
-        // }
-        // roomInfo.userName = userName;
-        // roomInfo.toUserName = toUserName;
-        // roomInfo.msg = msg;
-        console.log('currentRoom', currentRoom);
-        roomInfo.push({
-            userName,
-            toUserName,
-            msg
-        });
-        if (toUserName) {
-            var toTarget = arrAllSocket[toUserName];
-            var target = arrAllSocket[userName];
-            console.log('私聊的人', toUserName);
-            console.log('筛选后的值', roomInfo, currentRoom);
-            toTarget.emit('msg', roomInfo, currentRoom);
-            target.emit('msg', roomInfo, currentRoom);
-            console.log('private');
-        } else {
-            console.log('roomInfo:', roomInfo, currentRoom);
-            io.emit('msg', roomInfo, currentRoom);
-        }
-    });
-
-    // socket.on('state', function(currentRoom) {
-    //     roomInfo.push(currentRoom);
-    //     console.log('state', roomInfo);
-    // })
-
-    socket.on('private', function(name) {
-        console.log(name);
+    console.log('connection.');
+    socket.on('user join', function(data) {
+        console.log(data);
+        // users[username] = username
     })
-
-    socket.on('disconnect', () => {
-        console.log('连接已断开...');
+    socket.on('disconnect', function() {
+        console.log('disconnect.');
     });
 });
 
