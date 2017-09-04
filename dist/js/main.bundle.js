@@ -63766,17 +63766,22 @@ exports.default = {
   data: function data() {
     return {
       msg: '',
-      dialogVisible: false
+      dialogVisible: false,
+      userList: ''
     };
   },
 
   watch: {},
   created: function created() {
-    _socket2.default.on('connect', function () {
-      _socket2.default.emit('user join', 'aaa');
+    var socket = _socket2.default.connect('127.0.0.1:8099');
+    socket.on('connect', function () {
       console.log('connect');
+      socket.emit('user group', this.username);
+      socket.on('pmsg', function (from, to, msg) {});
     });
-  }
+  },
+
+  methods: {}
 }; //
 //
 //

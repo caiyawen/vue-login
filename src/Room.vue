@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import socket from 'socket.io-client';
+import io from 'socket.io-client';
 
 export default {
   name: 'room',
@@ -49,15 +49,23 @@ export default {
     return {
       msg: '',
       dialogVisible: false,
+      userList: '',
     }
   },
   watch: {
   },
   created() {
+    let socket = io.connect('127.0.0.1:8099');
     socket.on('connect', function() {
-      socket.emit('user join', 'aaa');
       console.log('connect');
+      socket.emit('user group', this.username);
+      socket.on('pmsg', function(from, to, msg) {
+
+      })
     })
+  },
+  methods: {
+
   }
 }
 </script>
