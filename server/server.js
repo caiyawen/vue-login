@@ -8,6 +8,7 @@ var mysql = require('mysql');
 var bodyParser = require('body-parser');
 var server = require('http').createServer(App);
 var io = require('socket.io')(server);
+const QiQiuYun = require('qiqiuyun-sdk');
 var usersInfo = [];
 var roomInfo = [];
 var arrAllSocket = [];
@@ -77,13 +78,20 @@ App.get('/', function(req, res) {
     res.sendFile(path.resolve(__dirname, '../dist/index.html'));
 });
 
+App.get('/play/token', function(req, res) {
+    const resNo = req.query.resNo;
+    const secretKey = '9e64ca5b4a446e9a0999d982';
+    const token = QiQiuYun.generateToken(resNo, secretKey);
+    console.log('token', token);
+    res.send(token);
+});
+
 //socket连接
 io.on('connection', function(socket) {
     console.log('connection');
     var url = socket.request.headers.referer;
     var roomID;
     var user;
-
     socket.on('join', function(userName) {
         console.log(userName);
         console.log(userName !== null && usersInfo.indexOf(userName) == '-1');
@@ -91,13 +99,13 @@ io.on('connection', function(socket) {
         arrAllSocket[user] = socket;
         if (userName !== null && usersInfo.indexOf(userName) == '-1') {
             usersInfo.push(userName);
-            roomInfo.push({
-                userName: userName,
-                toUserName: false,
-                msg: '加入了房间',
-            })
+            // roomInfo.push({
+            //     userName: userName,
+            //     toUserName: false,
+            //     msg: '加入了房间',
+            // })
             io.sockets.emit('sys', usersInfo);
-            io.sockets.emit('msg', roomInfo, false);
+            // io.sockets.emit('msg', roomInfo, false);
             console.log(userName + '加入了', 'usersInfo', usersInfo);
         }
     });
@@ -116,12 +124,12 @@ io.on('connection', function(socket) {
         }
         // socket.leave(roomID);
         console.log(roomInfo);
-        roomInfo.push({
-            userName: user,
-            toUserName: false,
-            msg: '退出了房间'
-        });
-        io.emit('msg', roomInfo);
+        // roomInfo.push({
+        //     userName: user,
+        //     toUserName: false,
+        //     msg: '退出了房间'
+        // });
+        // io.emit('msg', roomInfo);
         io.emit('sys', usersInfo)
         console.log(user + '退出了');
     });

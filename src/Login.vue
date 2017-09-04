@@ -1,9 +1,4 @@
 <template>
-    <!-- <form v-on:submit.prevent>
-      <input v-model="userName" type="text" placeholder="请输入名字">
-      <input v-model="password"  type="text" placeholder="请输入密码">
-      <button id="submit" @click="login">确定</button>
-    </form> -->
     <div class="login page">
           <div class="form">
               <div class="login-logo"></div>
@@ -11,8 +6,6 @@
               <input v-model="userName" class="usernameInput" type="text" maxlength="14" />
               <h3 class="title">输入密码</h3>                
               <input v-model="password" type="password" class="usernameInput">
-              <!-- <h3 class="title">输入房间号～</h3> -->
-              <!-- <input v-model="roomId" class="usernameInput" type="text" maxlength="14" /> -->
               <div class="enter-btn">
                   <button id="submit" @click="login" class="btn btn-lg chat-btn">进入聊天室</button>
               </div>
