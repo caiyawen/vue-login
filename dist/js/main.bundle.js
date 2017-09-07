@@ -60625,7 +60625,7 @@ exports = module.exports = __webpack_require__(78)(undefined);
 
 
 // module
-exports.push([module.i, "/* Fix user-agent */\n* {\n  box-sizing: border-box;\n}\nhtml {\n  font-weight: 300;\n  -webkit-font-smoothing: antialiased;\n}\nhtml,\ninput {\n  font-family: \"HelveticaNeue-Light\", \"Helvetica Neue Light\", \"Helvetica Neue\", Helvetica, Arial, \"Lucida Grande\", sans-serif;\n}\nhtml,\nbody {\n  height: 100%;\n  margin: 0;\n  padding: 0;\n}\nul {\n  list-style: none;\n  word-wrap: break-word;\n  padding-left: 0;\n}\n/* Pages */\n.pages {\n  height: 100%;\n  margin: 0;\n  padding: 0;\n  width: 100%;\n}\n.page {\n  height: 100%;\n  position: absolute;\n  width: 100%;\n}\n/* Login Page */\n.login.page {\n  background-color: darkseagreen;\n}\n.login.page .login-logo {\n  height: 100px;\n  margin-bottom: 80px;\n}\n.login.page .form {\n  height: 100px;\n  position: absolute;\n  text-align: center;\n  top: 15%;\n  width: 100%;\n}\n.login.page .form .usernameInput {\n  background-color: transparent;\n  border: none;\n  border-bottom: 2px solid #fff;\n  outline: none;\n  padding-bottom: 15px;\n  text-align: center;\n  width: 400px;\n}\n.login.page .title {\n  font-size: 200%;\n}\n.login.page .usernameInput {\n  font-size: 200%;\n  letter-spacing: 3px;\n}\n.login.page .title,\n.login.page .usernameInput {\n  color: #fff;\n  font-weight: 100;\n}\n/* Chat page */\n.chat {\n  padding: 0 12px;\n  height: 100%;\n  margin: 30px 50px;\n  border: 1px solid #ddd;\n}\n/* Font */\n.messages {\n  font-size: 120%;\n}\n.inputMessage {\n  font-size: 100%;\n}\n.log {\n  color: gray;\n  font-size: 70%;\n  margin: 5px;\n  text-align: center;\n}\n/* Messages */\n.chatArea {\n  height: 100%;\n  padding-bottom: 120px;\n}\n.messages {\n  height: 100%;\n  margin: 0;\n  overflow-y: scroll;\n  padding: 10px 20px 10px 20px;\n}\n.messages li {\n  padding: 4px 0;\n}\n.message.typing .messageBody {\n  color: gray;\n}\n.username {\n  font-weight: 700;\n  overflow: hidden;\n  padding-right: 15px;\n  text-align: right;\n  color: #f78b00;\n}\n/* Input */\n.inputMessage {\n  border: 2px solid #ddd;\n  bottom: 0;\n  height: 120px;\n  left: -6px;\n  outline: none;\n  padding-left: 10px;\n  position: absolute;\n  width: 100%;\n}\n.chat-title {\n  font-size: 24px;\n  color: #313131;\n  margin: 15px 0;\n  text-align: center;\n}\n.chat-info {\n  position: relative;\n  padding: 20px;\n  margin-left: -12px;\n  border-right: 1px solid darkseagreen;\n  height: 100%;\n  background: #eef1f6;\n}\n.chat-info span {\n  margin-right: 10px;\n}\n.chat-info .chat-btn {\n  position: absolute;\n  right: 20px;\n  top: 5px;\n}\n.chat-btn {\n  background: #fff;\n  border: 1px solid darkseagreen;\n  color: darkgreen;\n}\n.enter-btn {\n  padding-top: 20px;\n}\n.message-right {\n  text-align: right;\n}\n.message-right .username {\n  padding-right: 0;\n  padding-left: 15px;\n  color: #287b00;\n}\n.message-time {\n  font-size: 14px;\n  color: #616161;\n  padding: 4px 0;\n}\n.row,\n.col-md-3,\n.col-md-9 {\n  height: 100%;\n}\n.btn {\n  background: #fff;\n  border: 1px solid darkseagreen;\n  color: darkgreen;\n}\n#app {\n  height: 100%;\n}\n", ""]);
+exports.push([module.i, "/* Fix user-agent */\n* {\n  box-sizing: border-box;\n}\nhtml {\n  font-weight: 300;\n  -webkit-font-smoothing: antialiased;\n}\nhtml,\ninput {\n  font-family: \"HelveticaNeue-Light\", \"Helvetica Neue Light\", \"Helvetica Neue\", Helvetica, Arial, \"Lucida Grande\", sans-serif;\n}\nhtml,\nbody {\n  height: 100%;\n  margin: 0;\n  padding: 0;\n}\nul {\n  list-style: none;\n  word-wrap: break-word;\n  padding-left: 0;\n}\n/* Pages */\n.pages {\n  height: 100%;\n  margin: 0;\n  padding: 0;\n  width: 100%;\n}\n.page {\n  height: 100%;\n  position: absolute;\n  width: 100%;\n}\n/* Login Page */\n.login.page {\n  background-color: darkseagreen;\n}\n.login.page .login-logo {\n  height: 100px;\n  margin-bottom: 80px;\n}\n.login.page .form {\n  height: 100px;\n  position: absolute;\n  text-align: center;\n  top: 15%;\n  width: 100%;\n}\n.login.page .form .usernameInput {\n  background-color: transparent;\n  border: none;\n  border-bottom: 2px solid #fff;\n  outline: none;\n  padding-bottom: 15px;\n  text-align: center;\n  width: 400px;\n}\n.login.page .title {\n  font-size: 200%;\n}\n.login.page .usernameInput {\n  font-size: 200%;\n  letter-spacing: 3px;\n}\n.login.page .title,\n.login.page .usernameInput {\n  color: #fff;\n  font-weight: 100;\n}\n/* Chat page */\n.chat {\n  padding: 0 12px;\n  height: 100%;\n  margin: 30px 50px;\n  border: 1px solid #ddd;\n}\n/* Font */\n.messages {\n  font-size: 120%;\n}\n.inputMessage {\n  font-size: 100%;\n}\n.log {\n  color: gray;\n  font-size: 70%;\n  margin: 5px;\n  text-align: center;\n}\n/* Messages */\n.chatArea {\n  height: 100%;\n  padding-bottom: 160px;\n}\n.messages {\n  height: 100%;\n  margin: 0;\n  overflow-y: scroll;\n  padding: 10px 20px 10px 20px;\n}\n.messages li {\n  padding: 4px 0;\n}\n.message.typing .messageBody {\n  color: gray;\n}\n.username {\n  font-weight: 700;\n  overflow: hidden;\n  padding-right: 15px;\n  text-align: right;\n  color: #f78b00;\n}\n/* Input */\n.chat-title {\n  font-size: 24px;\n  color: #313131;\n  margin: 15px 0;\n  text-align: center;\n}\n.chat-info {\n  position: relative;\n  border-right: 1px solid #e1e1e1;\n  height: 100%;\n  background: #f9f9f9;\n}\n.chat-info span {\n  margin-right: 10px;\n}\n.chat-info .chat-btn {\n  position: absolute;\n  right: 20px;\n  top: 25px;\n}\n.chat-btn {\n  background: #fff;\n  border: 1px solid darkseagreen;\n  color: darkgreen;\n}\n.enter-btn {\n  padding-top: 20px;\n}\n.message-right {\n  text-align: right;\n}\n.message-right .username {\n  padding-right: 0;\n  padding-left: 15px;\n  color: #287b00;\n}\n.message-time {\n  font-size: 14px;\n  color: #616161;\n  padding: 4px 0;\n}\n.btn {\n  background: #fff;\n  border: 1px solid darkseagreen;\n  color: darkgreen;\n}\n", ""]);
 
 // exports
 
@@ -63734,7 +63734,7 @@ exports = module.exports = __webpack_require__(78)(undefined);
 
 
 // module
-exports.push([module.i, "\n.el-row,\n.el-col {\n  height: 100%;\n  position: relative;\n}\n.leave-btn {\n  position: absolute;\n  bottom: 100px;\n  left: 50%;\n  margin-left: -29px;\n  text-align: center;\n}\n.chat-msg {\n  display: inline-block;\n  margin-left: 10px;\n  padding: 2px 8px;\n  border-radius: 5px;\n  background-color: darkgreen;\n  color: #fff;\n  position: relative;\n  min-height: 28px;\n}\n.chat-msg:before {\n  content: '';\n  position: absolute;\n  left: -7px;\n  top: 10px;\n  width: 0;\n  height: 0;\n  border-style: solid;\n  border-width: 5px 8px 5px 0;\n  border-color: transparent darkgreen transparent transparent;\n}\n.file-box {\n  position: absolute;\n  left: -6px;\n  width: 100%;\n  padding-left: 10px;\n  bottom: 120px;\n  border: 2px solid #ddd;\n  border-bottom: 0;\n}\n", ""]);
+exports.push([module.i, "\n.chat-page {\n  width: 770px;\n  height: 640px;\n  margin: 30px auto;\n  box-shadow: 0 6px 30px #999;\n}\n.chat-page .el-row,\n.chat-page .el-col {\n  height: 100%;\n  padding: 0 !important;\n  margin: 0 !important;\n  position: relative;\n}\n.chat-page .chat-window {\n  background-color: #eee;\n}\n.chat-page .el-menu {\n  background-color: #f9f9f9;\n  overflow: scroll;\n  height: 548px;\n}\n.chat-page .el-menu .el-menu-item:hover,\n.chat-page .el-menu .el-menu-item.is-active {\n  background-color: #ddd;\n}\n.chat-page .inputMessage {\n  position: absolute;\n  bottom: 0;\n  height: 120px;\n  left: 0;\n  outline: 0;\n  border: 0;\n  padding-left: 10px;\n  width: 100%;\n  resize: none;\n}\n.chat-page .file-box {\n  position: absolute;\n  left: 0;\n  width: 100%;\n  padding: 10px;\n  bottom: 120px;\n  border-top: 1px solid #ddd;\n  border-bottom: 0;\n}\n.chat-page .chat-intro {\n  padding: 20px;\n  font-size: 14px;\n  border-bottom: 1px solid #e1e1e1;\n}\n.chat-page .chat-intro .user-name {\n  padding-bottom: 10px;\n}\n.leave-btn {\n  position: absolute;\n  bottom: 100px;\n  left: 50%;\n  margin-left: -29px;\n  text-align: center;\n}\n.chat-right {\n  text-align: right;\n}\n.chat-msg {\n  display: inline-block;\n  margin: 0 10px;\n  padding: 2px 8px;\n  border-radius: 5px;\n  background-color: darkgreen;\n  color: #fff;\n  position: relative;\n  min-height: 28px;\n}\n.chat-msg.right:before {\n  left: auto;\n  right: -5px;\n  border-width: 5px 0 5px 5px;\n  border-color: transparent transparent transparent darkgreen;\n}\n.chat-msg:before {\n  content: '';\n  position: absolute;\n  left: -5px;\n  top: 10px;\n  width: 0;\n  height: 0;\n  border-style: solid;\n  border-width: 5px 5px 5px 0;\n  border-color: transparent darkgreen transparent transparent;\n}\n", ""]);
 
 // exports
 
@@ -63760,6 +63760,60 @@ var _Player2 = _interopRequireDefault(_Player);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -63906,6 +63960,7 @@ exports.default = {
   methods: {
     submit: function submit(msg) {
       this.socket.emit('message', this.username, this.to, msg, 'word');
+      this.msg = '';
       console.log(this.msgList);
     },
     chatClick: function chatClick(user) {
@@ -67096,14 +67151,15 @@ Backoff.prototype.setJitter = function(jitter){
 "use strict";
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "chat"
+    staticClass: "chat-page"
   }, [_c('el-row', {
     attrs: {
       "gutter": 24
     }
   }, [_c('el-col', {
+    staticClass: "chat-list",
     attrs: {
-      "span": 5
+      "span": 8
     }
   }, [_c('div', {
     staticClass: "chat-info"
@@ -67114,7 +67170,11 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
         _vm.chatClick('group')
       }
     }
-  }, [_vm._v("群聊大厅")]), _vm._v(" "), _c('div', [_vm._v(" 昵称:" + _vm._s(_vm.username) + " ")]), _vm._v(" "), _c('div', [_vm._v(" 当前在线人数: ")]), _vm._v(" "), _c('el-menu', {
+  }, [_vm._v("群聊大厅")]), _vm._v(" "), _c('div', {
+    staticClass: "chat-intro"
+  }, [_c('div', {
+    staticClass: "user-name"
+  }, [_vm._v("昵称:" + _vm._s(_vm.username) + " ")]), _vm._v(" "), _c('div', [_vm._v("当前在线人数: ")])]), _vm._v(" "), _c('el-menu', {
     staticClass: "el-menu-vertical-demo",
     attrs: {
       "mode": "vertical",
@@ -67124,7 +67184,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     attrs: {
       "title": "用户列表"
     }
-  }, _vm._l((_vm.userList), function(user, index) {
+  }, [_vm._l((_vm.userList), function(user, index) {
     return _c('el-menu-item', {
       key: index,
       attrs: {
@@ -67142,14 +67202,123 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
         "value": user.unread
       }
     })], 1)])
-  }))], 1), _vm._v(" "), _c('button', {
+  }), _vm._v(" "), _vm._l((_vm.userList), function(user, index) {
+    return _c('el-menu-item', {
+      key: index,
+      attrs: {
+        "index": user.name
+      }
+    }, [_c('div', {
+      on: {
+        "click": function($event) {
+          _vm.chatClick(user.name)
+        }
+      }
+    }, [_vm._v(_vm._s(user.name) + "\n                "), _c('el-badge', {
+      staticClass: "mark",
+      attrs: {
+        "value": user.unread
+      }
+    })], 1)])
+  }), _vm._v(" "), _vm._l((_vm.userList), function(user, index) {
+    return _c('el-menu-item', {
+      key: index,
+      attrs: {
+        "index": user.name
+      }
+    }, [_c('div', {
+      on: {
+        "click": function($event) {
+          _vm.chatClick(user.name)
+        }
+      }
+    }, [_vm._v(_vm._s(user.name) + "\n                "), _c('el-badge', {
+      staticClass: "mark",
+      attrs: {
+        "value": user.unread
+      }
+    })], 1)])
+  }), _vm._v(" "), _vm._l((_vm.userList), function(user, index) {
+    return _c('el-menu-item', {
+      key: index,
+      attrs: {
+        "index": user.name
+      }
+    }, [_c('div', {
+      on: {
+        "click": function($event) {
+          _vm.chatClick(user.name)
+        }
+      }
+    }, [_vm._v(_vm._s(user.name) + "\n                "), _c('el-badge', {
+      staticClass: "mark",
+      attrs: {
+        "value": user.unread
+      }
+    })], 1)])
+  }), _vm._v(" "), _vm._l((_vm.userList), function(user, index) {
+    return _c('el-menu-item', {
+      key: index,
+      attrs: {
+        "index": user.name
+      }
+    }, [_c('div', {
+      on: {
+        "click": function($event) {
+          _vm.chatClick(user.name)
+        }
+      }
+    }, [_vm._v(_vm._s(user.name) + "\n                "), _c('el-badge', {
+      staticClass: "mark",
+      attrs: {
+        "value": user.unread
+      }
+    })], 1)])
+  }), _vm._v(" "), _vm._l((_vm.userList), function(user, index) {
+    return _c('el-menu-item', {
+      key: index,
+      attrs: {
+        "index": user.name
+      }
+    }, [_c('div', {
+      on: {
+        "click": function($event) {
+          _vm.chatClick(user.name)
+        }
+      }
+    }, [_vm._v(_vm._s(user.name) + "\n                "), _c('el-badge', {
+      staticClass: "mark",
+      attrs: {
+        "value": user.unread
+      }
+    })], 1)])
+  }), _vm._v(" "), _vm._l((_vm.userList), function(user, index) {
+    return _c('el-menu-item', {
+      key: index,
+      attrs: {
+        "index": user.name
+      }
+    }, [_c('div', {
+      on: {
+        "click": function($event) {
+          _vm.chatClick(user.name)
+        }
+      }
+    }, [_vm._v(_vm._s(user.name) + "\n                "), _c('el-badge', {
+      staticClass: "mark",
+      attrs: {
+        "value": user.unread
+      }
+    })], 1)])
+  })], 2)], 1), _vm._v(" "), _c('button', {
     staticClass: "btn leave-btn",
     on: {
       "click": _vm.leave
     }
   }, [_vm._v("退出房间")])], 1)]), _vm._v(" "), _c('el-col', {
+    staticClass: "chat-window",
     attrs: {
-      "span": 19
+      "span": 16
     }
   }, [_c('div', {
     staticClass: "chatArea"
@@ -67158,13 +67327,29 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
   }, _vm._l((_vm.msgList[_vm.to]), function(message, index) {
     return _c('li', {
       key: index
-    }, [(message.type == 'word') ? _c('span', [_vm._v("from: " + _vm._s(message.from) + ", to:" + _vm._s(message.to) + ", message:" + _vm._s(message.msg))]) : _vm._e(), _vm._v(" "), (message.type == 'file') ? _c('span', [_vm._v(_vm._s(message.from) + "给你发了一个课件噢，\n              "), _c('router-link', {
+    }, [(message.from == _vm.username) ? _c('div', {
+      staticClass: "chat-right"
+    }, [(message.type == 'word') ? _c('span', [_c('span', {
+      staticClass: "chat-msg right"
+    }, [_vm._v(_vm._s(message.msg))]), _vm._v(_vm._s(message.from) + "\n              ")]) : _vm._e(), _vm._v(" "), (message.type == 'file') ? _c('span', [_c('span', {
+      staticClass: "chat-msg right"
+    }, [_vm._v("\n                  " + _vm._s(message.from) + "给你发了一个课件噢，\n                  "), _c('router-link', {
       attrs: {
         "to": {
           path: ("file" + (message.msg))
         }
       }
-    }, [_vm._v("到新页面查看")]), _vm._v("，\n              ")], 1) : _vm._e()])
+    }, [_vm._v("到新页面查看")]), _vm._v("，\n                ")], 1), _vm._v(_vm._s(message.from) + "\n                ")]) : _vm._e()]) : _c('div', [(message.type == 'word') ? _c('span', [_vm._v("\n                " + _vm._s(message.from)), _c('span', {
+      staticClass: "chat-msg"
+    }, [_vm._v(_vm._s(message.msg))])]) : _vm._e(), _vm._v(" "), (message.type == 'file') ? _c('span', [_vm._v("\n                " + _vm._s(message.from) + "\n                "), _c('span', {
+      staticClass: "chat-msg"
+    }, [_vm._v("\n                  " + _vm._s(message.from) + "给你发了一个课件噢，\n                  "), _c('router-link', {
+      attrs: {
+        "to": {
+          path: ("file" + (message.msg))
+        }
+      }
+    }, [_vm._v("到新页面查看")]), _vm._v("，\n                ")], 1)]) : _vm._e()])])
   }))]), _vm._v(" "), _c('div', {
     staticClass: "file-box"
   }, [_c('span', {
