@@ -642,7 +642,7 @@ module.exports = Object.getPrototypeOf || function (O) {
 
 
 var bind = __webpack_require__(173);
-var isBuffer = __webpack_require__(483);
+var isBuffer = __webpack_require__(485);
 
 /*global toString:true*/
 
@@ -14423,7 +14423,7 @@ Transport.prototype.onClose = function () {
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(21);
-var normalizeHeaderName = __webpack_require__(485);
+var normalizeHeaderName = __webpack_require__(487);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -18337,12 +18337,12 @@ module.exports = function bind(fn, thisArg) {
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(21);
-var settle = __webpack_require__(486);
-var buildURL = __webpack_require__(488);
-var parseHeaders = __webpack_require__(489);
-var isURLSameOrigin = __webpack_require__(490);
+var settle = __webpack_require__(488);
+var buildURL = __webpack_require__(490);
+var parseHeaders = __webpack_require__(491);
+var isURLSameOrigin = __webpack_require__(492);
 var createError = __webpack_require__(175);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(491);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(493);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -18439,7 +18439,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(492);
+      var cookies = __webpack_require__(494);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -18524,7 +18524,7 @@ module.exports = function xhrAdapter(config) {
 "use strict";
 
 
-var enhanceError = __webpack_require__(487);
+var enhanceError = __webpack_require__(489);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -18611,11 +18611,11 @@ var _router = __webpack_require__(441);
 
 var _router2 = _interopRequireDefault(_router);
 
-var _vueCookie = __webpack_require__(479);
+var _vueCookie = __webpack_require__(481);
 
 var _vueCookie2 = _interopRequireDefault(_vueCookie);
 
-var _axios = __webpack_require__(481);
+var _axios = __webpack_require__(483);
 
 var _axios2 = _interopRequireDefault(_axios);
 
@@ -63392,7 +63392,7 @@ var _Group = __webpack_require__(475);
 
 var _Group2 = _interopRequireDefault(_Group);
 
-var _Player = __webpack_require__(500);
+var _Player = __webpack_require__(477);
 
 var _Player2 = _interopRequireDefault(_Player);
 
@@ -63765,24 +63765,79 @@ exports.default = {
   name: 'room',
   data: function data() {
     return {
+      username: '',
+      to: '',
       msg: '',
       dialogVisible: false,
-      userList: ''
+      userList: [],
+      privateList: [],
+      msgList: {},
+      msgArr: [],
+      socket: ''
     };
   },
 
-  watch: {},
+  watch: {
+    msgArr: {
+      handler: function handler(val, oldVal) {
+        console.log(val);
+      },
+      deep: true
+    }
+  },
   created: function created() {
-    var socket = _socket2.default.connect('127.0.0.1:8099');
-    socket.on('connect', function () {
+    var _this = this;
+
+    this.socket = _socket2.default.connect('127.0.0.1:8099');
+    this.username = this.$cookie.get('userName');
+
+    this.socket.on('connect', function () {
       console.log('connect');
-      socket.emit('user group', this.username);
-      socket.on('pmsg', function (from, to, msg) {});
+      _this.socket.emit('user join', _this.username);
+      _this.socket.on('user join', function (users) {
+        _this.userList = users;
+      });
+      _this.socket.on('msg', function (from, to, msg) {
+        console.log(from, to, msg);
+        if (to == 'group') {
+          _this.msgList['group'].push({ from: from, to: to, msg: msg });
+        } else {
+          if (to == _this.username) {
+            if (!_this.msgList[from]) {
+              _this.$set(_this.msgList, [from], []);
+            }
+            _this.msgList[from].push({ from: from, to: to, msg: msg });
+          } else {
+            if (!_this.msgList[to]) {
+              _this.$set(_this.msgList, [to], []);
+            }
+            _this.msgList[to].push({ from: from, to: to, msg: msg });
+          }
+        }
+        console.log(_this.msgList);
+      });
     });
   },
 
-  methods: {}
+  methods: {
+    submit: function submit(msg) {
+      this.socket.emit('message', this.username, this.to, msg);
+      console.log(this.msgList);
+    },
+    chatClick: function chatClick(user) {
+      this.to = user;
+      if (!this.msgList[this.to]) {
+        this.$set(this.msgList, [this.to], []);
+        console.log(this.msgList);
+      }
+    },
+    leave: function leave() {}
+  }
 }; //
+//
+//
+//
+//
 //
 //
 //
@@ -67002,8 +67057,13 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
   }, [_c('div', {
     staticClass: "chat-info"
   }, [_c('button', {
-    staticClass: "btn chat-btn"
-  }, [_vm._v("群聊大厅")]), _vm._v(" "), _c('div', [_vm._v(" 昵称: ")]), _vm._v(" "), _c('div', [_vm._v(" 当前在线人数: ")]), _vm._v(" "), _c('el-menu', {
+    staticClass: "btn chat-btn",
+    on: {
+      "click": function($event) {
+        _vm.chatClick('group')
+      }
+    }
+  }, [_vm._v("群聊大厅")]), _vm._v(" "), _c('div', [_vm._v(" 昵称:" + _vm._s(_vm.username) + " ")]), _vm._v(" "), _c('div', [_vm._v(" 当前在线人数: ")]), _vm._v(" "), _c('el-menu', {
     staticClass: "el-menu-vertical-demo",
     attrs: {
       "mode": "vertical",
@@ -67013,8 +67073,24 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     attrs: {
       "title": "用户列表"
     }
-  })], 1), _vm._v(" "), _c('button', {
-    staticClass: "btn leave-btn"
+  }, _vm._l((_vm.userList), function(user, index) {
+    return _c('el-menu-item', {
+      key: index,
+      attrs: {
+        "index": "index"
+      }
+    }, [_c('div', {
+      on: {
+        "click": function($event) {
+          _vm.chatClick(user)
+        }
+      }
+    }, [_vm._v(_vm._s(user))])])
+  }))], 1), _vm._v(" "), _c('button', {
+    staticClass: "btn leave-btn",
+    on: {
+      "click": _vm.leave
+    }
   }, [_vm._v("退出房间")])], 1)]), _vm._v(" "), _c('el-col', {
     attrs: {
       "span": 19
@@ -67023,7 +67099,11 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     staticClass: "chatArea"
   }, [_c('ul', {
     staticClass: "messages"
-  })]), _vm._v(" "), _c('div', {
+  }, _vm._l((_vm.msgList[_vm.to]), function(message, index) {
+    return _c('li', {
+      key: index
+    }, [_vm._v("\n                  from: " + _vm._s(message.from) + ", to:" + _vm._s(message.to) + ", message:" + _vm._s(message.msg) + "\n                ")])
+  }))]), _vm._v(" "), _c('div', {
     staticClass: "file-box"
   }), _vm._v(" "), _c('textarea', {
     directives: [{
@@ -67040,6 +67120,10 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       "value": (_vm.msg)
     },
     on: {
+      "keydown": function($event) {
+        if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13)) { return null; }
+        _vm.submit(_vm.msg)
+      },
       "input": function($event) {
         if ($event.target.composing) { return; }
         _vm.msg = $event.target.value
@@ -67180,9 +67264,223 @@ if (false) {
 }
 
 /***/ }),
-/* 477 */,
-/* 478 */,
+/* 477 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_0_4_vue_loader_lib_selector_type_script_index_0_Player_vue__ = __webpack_require__(478);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_0_4_vue_loader_lib_selector_type_script_index_0_Player_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_0_4_vue_loader_lib_selector_type_script_index_0_Player_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_0_4_vue_loader_lib_template_compiler_index_id_data_v_6a008443_hasScoped_false_node_modules_vue_loader_13_0_4_vue_loader_lib_selector_type_template_index_0_Player_vue__ = __webpack_require__(480);
+var disposed = false
+var normalizeComponent = __webpack_require__(56)
+/* script */
+
+/* template */
+
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_0_4_vue_loader_lib_selector_type_script_index_0_Player_vue___default.a,
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_0_4_vue_loader_lib_template_compiler_index_id_data_v_6a008443_hasScoped_false_node_modules_vue_loader_13_0_4_vue_loader_lib_selector_type_template_index_0_Player_vue__["a" /* default */],
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/Player.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Player.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-loader/node_modules/vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6a008443", Component.options)
+  } else {
+    hotAPI.reload("data-v-6a008443", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 478 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _loadScript = __webpack_require__(479);
+
+var _loadScript2 = _interopRequireDefault(_loadScript);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+    // props: ['resNo'],
+    data: function data() {
+        return {
+            playToken: '',
+            resNo: ''
+        };
+    },
+    mounted: function mounted() {
+        this.resNo = this.$route.params.id;
+        this.initPlayer();
+    },
+
+    methods: {
+        getPlayToken: function getPlayToken(resNo) {
+            var _this = this;
+
+            return this.$axios.get('/play/token', { params: { resNo: resNo } }).then(function (response) {
+                _this.playToken = response.data;
+                console.log(_this.playToken);
+            }).promise;
+        },
+        getPlayerSDK: function getPlayerSDK(url) {
+            return new Promise(function (resolve, reject) {
+                (0, _loadScript2.default)(url, function (err) {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve();
+                });
+            });
+        },
+        initPlayer: function initPlayer() {
+            var _this2 = this;
+
+            var playerSDKUri = '//oilgb9e2p.qnssl.com/js-sdk/sdk-v1.js' + '?' + ~~(Date.now() / 1000 / 60);
+            Promise.all([this.getPlayToken(this.resNo), this.getPlayerSDK(playerSDKUri)]).then(function () {
+                console.log(_this2.playToken);
+                var player = new window.QiQiuYun.Player({
+                    id: 'player', // 用于初始化的DOM节点id
+                    resNo: _this2.resNo, // 想要播放的资源编号
+                    token: 'private:' + _this2.playToken // 请求播放的认证token
+                });
+            });
+        }
+    }
+}; //
+//
+//
+//
+//
+//
+
+/***/ }),
 /* 479 */
+/***/ (function(module, exports) {
+
+
+module.exports = function load (src, opts, cb) {
+  var head = document.head || document.getElementsByTagName('head')[0]
+  var script = document.createElement('script')
+
+  if (typeof opts === 'function') {
+    cb = opts
+    opts = {}
+  }
+
+  opts = opts || {}
+  cb = cb || function() {}
+
+  script.type = opts.type || 'text/javascript'
+  script.charset = opts.charset || 'utf8';
+  script.async = 'async' in opts ? !!opts.async : true
+  script.src = src
+
+  if (opts.attrs) {
+    setAttributes(script, opts.attrs)
+  }
+
+  if (opts.text) {
+    script.text = '' + opts.text
+  }
+
+  var onend = 'onload' in script ? stdOnEnd : ieOnEnd
+  onend(script, cb)
+
+  // some good legacy browsers (firefox) fail the 'in' detection above
+  // so as a fallback we always set onload
+  // old IE will ignore this and new IE will set onload
+  if (!script.onload) {
+    stdOnEnd(script, cb);
+  }
+
+  head.appendChild(script)
+}
+
+function setAttributes(script, attrs) {
+  for (var attr in attrs) {
+    script.setAttribute(attr, attrs[attr]);
+  }
+}
+
+function stdOnEnd (script, cb) {
+  script.onload = function () {
+    this.onerror = this.onload = null
+    cb(null, script)
+  }
+  script.onerror = function () {
+    // this.onload = null here is necessary
+    // because even IE9 works not like others
+    this.onerror = this.onload = null
+    cb(new Error('Failed to load ' + this.src), script)
+  }
+}
+
+function ieOnEnd (script, cb) {
+  script.onreadystatechange = function () {
+    if (this.readyState != 'complete' && this.readyState != 'loaded') return
+    this.onreadystatechange = null
+    cb(null, script) // there is no way to catch loading errors in IE8
+  }
+}
+
+
+/***/ }),
+/* 480 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', [_c('div', {
+    ref: "player",
+    attrs: {
+      "id": "player"
+    }
+  })])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-loader/node_modules/vue-hot-reload-api").rerender("data-v-6a008443", esExports)
+  }
+}
+
+/***/ }),
+/* 481 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function () {
@@ -67191,7 +67489,7 @@ if (false) {
             isFinite(value) &&
             Math.floor(value) === value;
     };
-    var Cookie = __webpack_require__(480);
+    var Cookie = __webpack_require__(482);
 
     var VueCookie = {
 
@@ -67233,7 +67531,7 @@ if (false) {
 
 
 /***/ }),
-/* 480 */
+/* 482 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -67395,13 +67693,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 481 */
+/* 483 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(482);
+module.exports = __webpack_require__(484);
 
 /***/ }),
-/* 482 */
+/* 484 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67409,7 +67707,7 @@ module.exports = __webpack_require__(482);
 
 var utils = __webpack_require__(21);
 var bind = __webpack_require__(173);
-var Axios = __webpack_require__(484);
+var Axios = __webpack_require__(486);
 var defaults = __webpack_require__(118);
 
 /**
@@ -67444,14 +67742,14 @@ axios.create = function create(instanceConfig) {
 
 // Expose Cancel & CancelToken
 axios.Cancel = __webpack_require__(177);
-axios.CancelToken = __webpack_require__(498);
+axios.CancelToken = __webpack_require__(500);
 axios.isCancel = __webpack_require__(176);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(499);
+axios.spread = __webpack_require__(501);
 
 module.exports = axios;
 
@@ -67460,7 +67758,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 483 */
+/* 485 */
 /***/ (function(module, exports) {
 
 /*!
@@ -67487,7 +67785,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 484 */
+/* 486 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67495,10 +67793,10 @@ function isSlowBuffer (obj) {
 
 var defaults = __webpack_require__(118);
 var utils = __webpack_require__(21);
-var InterceptorManager = __webpack_require__(493);
-var dispatchRequest = __webpack_require__(494);
-var isAbsoluteURL = __webpack_require__(496);
-var combineURLs = __webpack_require__(497);
+var InterceptorManager = __webpack_require__(495);
+var dispatchRequest = __webpack_require__(496);
+var isAbsoluteURL = __webpack_require__(498);
+var combineURLs = __webpack_require__(499);
 
 /**
  * Create a new instance of Axios
@@ -67580,7 +67878,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 485 */
+/* 487 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67599,7 +67897,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 486 */
+/* 488 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67632,7 +67930,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 487 */
+/* 489 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67660,7 +67958,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 488 */
+/* 490 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67735,7 +68033,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 489 */
+/* 491 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67779,7 +68077,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 490 */
+/* 492 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67854,7 +68152,7 @@ module.exports = (
 
 
 /***/ }),
-/* 491 */
+/* 493 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67897,7 +68195,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 492 */
+/* 494 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67957,7 +68255,7 @@ module.exports = (
 
 
 /***/ }),
-/* 493 */
+/* 495 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68016,14 +68314,14 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 494 */
+/* 496 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(21);
-var transformData = __webpack_require__(495);
+var transformData = __webpack_require__(497);
 var isCancel = __webpack_require__(176);
 var defaults = __webpack_require__(118);
 
@@ -68102,7 +68400,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 495 */
+/* 497 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68129,7 +68427,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 496 */
+/* 498 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68150,7 +68448,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 497 */
+/* 499 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68171,7 +68469,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 498 */
+/* 500 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68235,7 +68533,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 499 */
+/* 501 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68267,222 +68565,6 @@ module.exports = function spread(callback) {
   };
 };
 
-
-/***/ }),
-/* 500 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_0_4_vue_loader_lib_selector_type_script_index_0_Player_vue__ = __webpack_require__(501);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_0_4_vue_loader_lib_selector_type_script_index_0_Player_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_0_4_vue_loader_lib_selector_type_script_index_0_Player_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_0_4_vue_loader_lib_template_compiler_index_id_data_v_6a008443_hasScoped_false_node_modules_vue_loader_13_0_4_vue_loader_lib_selector_type_template_index_0_Player_vue__ = __webpack_require__(503);
-var disposed = false
-var normalizeComponent = __webpack_require__(56)
-/* script */
-
-/* template */
-
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_0_4_vue_loader_lib_selector_type_script_index_0_Player_vue___default.a,
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_0_4_vue_loader_lib_template_compiler_index_id_data_v_6a008443_hasScoped_false_node_modules_vue_loader_13_0_4_vue_loader_lib_selector_type_template_index_0_Player_vue__["a" /* default */],
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "src/Player.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] Player.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-loader/node_modules/vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6a008443", Component.options)
-  } else {
-    hotAPI.reload("data-v-6a008443", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
-
-
-/***/ }),
-/* 501 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _loadScript = __webpack_require__(502);
-
-var _loadScript2 = _interopRequireDefault(_loadScript);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = {
-    // props: ['resNo'],
-    data: function data() {
-        return {
-            playToken: '',
-            resNo: ''
-        };
-    },
-    mounted: function mounted() {
-        this.resNo = this.$route.params.id;
-        this.initPlayer();
-    },
-
-    methods: {
-        getPlayToken: function getPlayToken(resNo) {
-            var _this = this;
-
-            return this.$axios.get('/play/token', { params: { resNo: resNo } }).then(function (response) {
-                _this.playToken = response.data;
-                console.log(_this.playToken);
-            }).promise;
-        },
-        getPlayerSDK: function getPlayerSDK(url) {
-            return new Promise(function (resolve, reject) {
-                (0, _loadScript2.default)(url, function (err) {
-                    if (err) {
-                        reject(err);
-                    }
-                    resolve();
-                });
-            });
-        },
-        initPlayer: function initPlayer() {
-            var _this2 = this;
-
-            var playerSDKUri = '//oilgb9e2p.qnssl.com/js-sdk/sdk-v1.js' + '?' + ~~(Date.now() / 1000 / 60);
-            Promise.all([this.getPlayToken(this.resNo), this.getPlayerSDK(playerSDKUri)]).then(function () {
-                console.log(_this2.playToken);
-                var player = new window.QiQiuYun.Player({
-                    id: 'player', // 用于初始化的DOM节点id
-                    resNo: _this2.resNo, // 想要播放的资源编号
-                    token: 'private:' + _this2.playToken // 请求播放的认证token
-                });
-            });
-        }
-    }
-}; //
-//
-//
-//
-//
-//
-
-/***/ }),
-/* 502 */
-/***/ (function(module, exports) {
-
-
-module.exports = function load (src, opts, cb) {
-  var head = document.head || document.getElementsByTagName('head')[0]
-  var script = document.createElement('script')
-
-  if (typeof opts === 'function') {
-    cb = opts
-    opts = {}
-  }
-
-  opts = opts || {}
-  cb = cb || function() {}
-
-  script.type = opts.type || 'text/javascript'
-  script.charset = opts.charset || 'utf8';
-  script.async = 'async' in opts ? !!opts.async : true
-  script.src = src
-
-  if (opts.attrs) {
-    setAttributes(script, opts.attrs)
-  }
-
-  if (opts.text) {
-    script.text = '' + opts.text
-  }
-
-  var onend = 'onload' in script ? stdOnEnd : ieOnEnd
-  onend(script, cb)
-
-  // some good legacy browsers (firefox) fail the 'in' detection above
-  // so as a fallback we always set onload
-  // old IE will ignore this and new IE will set onload
-  if (!script.onload) {
-    stdOnEnd(script, cb);
-  }
-
-  head.appendChild(script)
-}
-
-function setAttributes(script, attrs) {
-  for (var attr in attrs) {
-    script.setAttribute(attr, attrs[attr]);
-  }
-}
-
-function stdOnEnd (script, cb) {
-  script.onload = function () {
-    this.onerror = this.onload = null
-    cb(null, script)
-  }
-  script.onerror = function () {
-    // this.onload = null here is necessary
-    // because even IE9 works not like others
-    this.onerror = this.onload = null
-    cb(new Error('Failed to load ' + this.src), script)
-  }
-}
-
-function ieOnEnd (script, cb) {
-  script.onreadystatechange = function () {
-    if (this.readyState != 'complete' && this.readyState != 'loaded') return
-    this.onreadystatechange = null
-    cb(null, script) // there is no way to catch loading errors in IE8
-  }
-}
-
-
-/***/ }),
-/* 503 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('div', {
-    ref: "player",
-    attrs: {
-      "id": "player"
-    }
-  })])
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-loader/node_modules/vue-hot-reload-api").rerender("data-v-6a008443", esExports)
-  }
-}
 
 /***/ })
 /******/ ]);

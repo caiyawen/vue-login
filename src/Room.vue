@@ -3,27 +3,31 @@
     <el-row :gutter="24">
         <el-col :span="5">
             <div class="chat-info">
-              <button class="btn chat-btn">群聊大厅</button>
-              <div> 昵称: </div>
+              <button class="btn chat-btn" @click="chatClick('group')">群聊大厅</button>
+              <div> 昵称:{{ username }} </div>
               <div> 当前在线人数: </div>
               <el-menu mode="vertical" default-active="1" class="el-menu-vertical-demo">
                 <el-menu-item-group title="用户列表">
-
+                  <el-menu-item v-bind:key="index" index="index" v-for="(user, index) in userList">
+                    <div @click="chatClick(user)">{{user}}</div>
+                  </el-menu-item>
                 </el-menu-item-group>
               </el-menu> 
-              <button class="btn leave-btn">退出房间</button>
+              <button class="btn leave-btn" @click="leave">退出房间</button>
             </div>
         </el-col>
         <el-col :span="19">
             <div class="chatArea">
                 <ul class="messages">
-
+                  <li v-bind:key="index" v-for="(message, index) in msgList[to]">
+                    from: {{ message.from }}, to:{{ message.to }}, message:{{ message.msg }}
+                  </li>
                 </ul>
             </div>
             <div class="file-box">
               <!-- <span @click="dialogVisible = true"><i class="el-icon-message"></i></span> -->
             </div>
-            <textarea class="inputMessage" v-model="msg" placeholder="Type here..." />
+            <textarea class="inputMessage" @keydown.enter="submit(msg)" v-model="msg" placeholder="Type here..." />
             <el-dialog
               title="课件选择"
               :visible.sync="dialogVisible"
@@ -47,25 +51,70 @@ export default {
   name: 'room',
   data() {
     return {
+      username: '',
+      to: '',
       msg: '',
       dialogVisible: false,
-      userList: '',
+      userList: [],
+      privateList: [],
+      msgList: {},
+      msgArr: [],
+      socket: '',
     }
   },
   watch: {
+    msgArr: {
+      handler: function (val, oldVal) { 
+        console.log(val);
+       },
+      deep: true
+    }
   },
   created() {
-    let socket = io.connect('127.0.0.1:8099');
-    socket.on('connect', function() {
+    this.socket = io.connect('127.0.0.1:8099');
+    this.username = this.$cookie.get('userName');
+    
+    this.socket.on('connect', () => {
       console.log('connect');
-      socket.emit('user group', this.username);
-      socket.on('pmsg', function(from, to, msg) {
-
+      this.socket.emit('user join', this.username);
+      this.socket.on('user join', (users) => {
+        this.userList = users;
+      })
+      this.socket.on('msg', (from, to, msg) => {
+        console.log(from, to, msg);
+        if (to == 'group') {  
+            this.msgList['group'].push({from, to, msg});              
+        } else {
+            if (to == this.username) {
+                if (!this.msgList[from]) {
+                    this.$set(this.msgList, [from], []);
+                }
+                this.msgList[from].push({from, to, msg});
+            } else {
+                if (!this.msgList[to]) {
+                    this.$set(this.msgList, [to], []);
+                }
+                this.msgList[to].push({from, to, msg});
+            }
+        }
+        console.log(this.msgList); 
       })
     })
   },
   methods: {
-
+    submit(msg) {
+      this.socket.emit('message', this.username, this.to, msg);
+      console.log(this.msgList);
+    },
+    chatClick(user) {
+      this.to = user;
+      if (!this.msgList[this.to]) {
+        this.$set(this.msgList, [this.to], []);
+        console.log(this.msgList); 
+      }
+    },
+    leave() {
+    }
   }
 }
 </script>
@@ -113,5 +162,3 @@ export default {
   border-bottom: 0;
 }
 </style>
-
-

@@ -83,18 +83,62 @@ App.get('/play/token', function(req, res) {
     res.send(token);
 });
 
+function sendmsg(data) {
+    io.emit('chat message', data);
+}
+
+function sendUserMsg(data) {
+    if (data.to in usocket) {
+        console.log('================')
+        console.log('to' + data.to, data);
+        usocket[data.to].emit('to' + data.to, data);
+        usocket[data.user].emit('to' + data.user, data);
+        console.log('================')
+    }
+}
+
 //socket连接
 var users = [];
-usocket = {};
+var arrAllSocket = [];
 io.on('connection', function(socket) {
     console.log('connection.');
-    socket.on('user join', function(data) {
-        console.log(data);
-        // users[username] = username
-    })
+    socket.on('user join', function(username) {
+        console.log('user join');
+        if (users.indexOf(username) == -1) {
+            users.push(username);
+        }
+        user = username;
+        arrAllSocket[user] = socket;
+        io.emit('user join', users);
+        // sendmsg(username);
+    });
+    socket.on('message', function(from, to, msg) {
+        var target = arrAllSocket[to];
+        var fromTarget = arrAllSocket[from];
+        if (target) {
+            target.emit('msg', from, to, msg);
+            fromTarget.emit('msg', from, to, msg);
+        } else {
+            io.emit('msg', from, to, msg);
+            console.log('群聊');
+        }
+    });
     socket.on('disconnect', function() {
         console.log('disconnect.');
     });
+    socket.on('chat message', function(data) {
+        var msg = data.msg;
+        users[username] = data.user;
+        data.msg = data.msg;
+        console.log(data);
+        if (!data.to) {
+            console.log('public');
+        } else {
+            data.type = 2;
+            console.log('private');
+            sendUserMsg(data);
+        }
+    })
 });
 
 
