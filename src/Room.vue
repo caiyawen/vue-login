@@ -84,8 +84,10 @@ export default {
         console.log(users);
         this.userList = [];
         users.map((val) => {
-            console.log(this.userList);
-            this.userList.push({name: val, unread: 0});
+            if (val !== this.username) {    
+                console.log(this.userList);
+                this.userList.push({name: val, unread: 0});
+            }
         });
         console.log(this.userList)
       })
@@ -140,6 +142,8 @@ export default {
       }
     },
     leave() {
+        console.log('退出房间');
+        this.socket.emit('disconnect');
     }
   }
 }

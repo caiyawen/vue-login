@@ -63752,7 +63752,7 @@ exports.push([module.i, "\n.el-row,\n.el-col {\n  height: 100%;\n  position: rel
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _socket = __webpack_require__(451);
@@ -63762,101 +63762,106 @@ var _socket2 = _interopRequireDefault(_socket);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
-  name: 'room',
-  data: function data() {
-    return {
-      username: '',
-      to: '',
-      msg: '',
-      dialogVisible: false,
-      userList: [],
-      privateList: [],
-      msgList: {},
-      msgArr: [],
-      socket: '',
-      unread: {}
-    };
-  },
+    name: 'room',
+    data: function data() {
+        return {
+            username: '',
+            to: '',
+            msg: '',
+            dialogVisible: false,
+            userList: [],
+            privateList: [],
+            msgList: {},
+            msgArr: [],
+            socket: '',
+            unread: {}
+        };
+    },
 
-  watch: {
-    msgArr: {
-      handler: function handler(val, oldVal) {
-        console.log(val);
-      },
-      deep: true
-    }
-  },
-  created: function created() {
-    var _this = this;
+    watch: {
+        msgArr: {
+            handler: function handler(val, oldVal) {
+                console.log(val);
+            },
+            deep: true
+        }
+    },
+    created: function created() {
+        var _this = this;
 
-    this.socket = _socket2.default.connect('127.0.0.1:8099');
-    this.username = this.$cookie.get('userName');
+        this.socket = _socket2.default.connect('127.0.0.1:8099');
+        this.username = this.$cookie.get('userName');
 
-    this.socket.on('connect', function () {
-      console.log('connect');
-      _this.socket.emit('user join', _this.username);
-      _this.socket.on('user join', function (users) {
-        console.log(users);
-        _this.userList = [];
-        users.map(function (val) {
-          console.log(_this.userList);
-          _this.userList.push({ name: val, unread: 0 });
+        this.socket.on('connect', function () {
+            console.log('connect');
+            _this.socket.emit('user join', _this.username);
+            _this.socket.on('user join', function (users) {
+                console.log(users);
+                _this.userList = [];
+                users.map(function (val) {
+                    if (val !== _this.username) {
+                        console.log(_this.userList);
+                        _this.userList.push({ name: val, unread: 0 });
+                    }
+                });
+                console.log(_this.userList);
+            });
+            _this.socket.on('msg', function (from, to, msg) {
+                console.log(from, to, msg);
+                if (to == 'group') {
+                    if (!_this.msgList['group']) {
+                        _this.$set(_this.msgList, ['group'], []);
+                    }
+                    _this.msgList['group'].push({ from: from, to: to, msg: msg });
+                } else {
+                    if (to == _this.username) {
+                        if (!_this.msgList[from]) {
+                            _this.$set(_this.msgList, [from], []);
+                        }
+                        _this.msgList[from].push({ from: from, to: to, msg: msg });
+                    } else {
+                        if (!_this.msgList[to]) {
+                            _this.$set(_this.msgList, [to], []);
+                        }
+                        _this.msgList[to].push({ from: from, to: to, msg: msg });
+                    }
+                }
+                if (_this.to !== to && _this.to !== from) {
+                    console.log('提示消息', from);
+                    _this.userList.map(function (val) {
+                        if (val.name == from) {
+                            val.unread += 1;
+                        }
+                    });
+                    console.log(_this.userList);
+                }
+                console.log(_this.msgList);
+            });
         });
-        console.log(_this.userList);
-      });
-      _this.socket.on('msg', function (from, to, msg) {
-        console.log(from, to, msg);
-        if (to == 'group') {
-          if (!_this.msgList['group']) {
-            _this.$set(_this.msgList, ['group'], []);
-          }
-          _this.msgList['group'].push({ from: from, to: to, msg: msg });
-        } else {
-          if (to == _this.username) {
-            if (!_this.msgList[from]) {
-              _this.$set(_this.msgList, [from], []);
-            }
-            _this.msgList[from].push({ from: from, to: to, msg: msg });
-          } else {
-            if (!_this.msgList[to]) {
-              _this.$set(_this.msgList, [to], []);
-            }
-            _this.msgList[to].push({ from: from, to: to, msg: msg });
-          }
-        }
-        if (_this.to !== to && _this.to !== from) {
-          console.log('提示消息', from);
-          _this.userList.map(function (val) {
-            if (val.name == from) {
-              val.unread += 1;
-            }
-          });
-          console.log(_this.userList);
-        }
-        console.log(_this.msgList);
-      });
-    });
-  },
+    },
 
-  methods: {
-    submit: function submit(msg) {
-      this.socket.emit('message', this.username, this.to, msg);
-      console.log(this.msgList);
-    },
-    chatClick: function chatClick(user) {
-      this.to = user;
-      this.userList.map(function (val) {
-        if (val.name == user) {
-          val.unread = 0;
+    methods: {
+        submit: function submit(msg) {
+            this.socket.emit('message', this.username, this.to, msg);
+            console.log(this.msgList);
+        },
+        chatClick: function chatClick(user) {
+            this.to = user;
+            this.userList.map(function (val) {
+                if (val.name == user) {
+                    val.unread = 0;
+                }
+            });
+            if (!this.msgList[this.to]) {
+                this.$set(this.msgList, [this.to], []);
+                console.log(this.msgList);
+            }
+        },
+        leave: function leave() {
+            console.log('退出房间');
+            this.socket.emit('disconnect');
         }
-      });
-      if (!this.msgList[this.to]) {
-        this.$set(this.msgList, [this.to], []);
-        console.log(this.msgList);
-      }
-    },
-    leave: function leave() {}
-  }
+    }
 }; //
 //
 //

@@ -127,19 +127,19 @@ io.on('connection', function(socket) {
     socket.on('disconnect', function() {
         console.log('disconnect.');
     });
-    socket.on('chat message', function(data) {
-        var msg = data.msg;
-        users[username] = data.user;
-        data.msg = data.msg;
-        console.log(data);
-        if (!data.to) {
-            console.log('public');
-        } else {
-            data.type = 2;
-            console.log('private');
-            sendUserMsg(data);
-        }
-    })
+    // socket.on('chat message', function(data) {
+    //     var msg = data.msg;
+    //     users[username] = data.user;
+    //     data.msg = data.msg;
+    //     console.log(data);
+    //     if (!data.to) {
+    //         console.log('public');
+    //     } else {
+    //         data.type = 2;
+    //         console.log('private');
+    //         sendUserMsg(data);
+    //     }
+    // })
 });
 
 
