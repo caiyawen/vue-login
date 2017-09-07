@@ -124,6 +124,10 @@ io.on('connection', function(socket) {
             console.log('群聊');
         }
     });
+    socket.on('leave', function() {
+      console.log('leave');
+      io.emit('disconnect');
+    })
     socket.on('disconnect', function() {
         console.log('disconnect.');
     });

@@ -63837,6 +63837,9 @@ exports.default = {
                 }
                 console.log(_this.msgList);
             });
+            _this.socket.on('disconnect', function () {
+                console.log('disconnect');
+            });
         });
     },
 
@@ -63858,8 +63861,8 @@ exports.default = {
             }
         },
         leave: function leave() {
-            console.log('退出房间');
-            this.socket.emit('disconnect');
+            this.socket.emit('leave');
+            this.$router.push({ name: 'login' });
         }
     }
 }; //

@@ -121,6 +121,9 @@ export default {
             console.log(this.userList);             
         }
         console.log(this.msgList); 
+      });
+      this.socket.on('disconnect', () => {
+          console.log('disconnect');
       })
     })
   },
@@ -142,8 +145,8 @@ export default {
       }
     },
     leave() {
-        console.log('退出房间');
-        this.socket.emit('disconnect');
+        this.socket.emit('leave');
+        this.$router.push({name: 'login'});        
     }
   }
 }
