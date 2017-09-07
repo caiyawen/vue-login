@@ -1,56 +1,66 @@
 <template>
   <div class="chat">
     <el-row :gutter="24">
-        <el-col :span="5">
-            <div class="chat-info">
-              <button class="btn chat-btn" @click="chatClick('group')">群聊大厅</button>
-              <div> 昵称:{{ username }} </div>
-              <div> 当前在线人数: </div>
-              <el-menu mode="vertical" default-active="1" class="el-menu-vertical-demo">
-                <el-menu-item-group title="用户列表">
-                  <el-menu-item v-bind:key="index" :index="user.name" v-for="(user, index) in userList">
-                    <div @click="chatClick(user.name)">{{user.name}}
-                        <el-badge class="mark" :value="user.unread" />
-                    </div>
-                  </el-menu-item>
-                </el-menu-item-group>
-              </el-menu> 
-              <button class="btn leave-btn" @click="leave">退出房间</button>
-            </div>
-        </el-col>
-        <el-col :span="19">
-            <div class="chatArea">
-                <ul class="messages">
-                  <li v-bind:key="index" v-for="(message, index) in msgList[to]">
-                    <span v-if="message.type == 'word'">from: {{ message.from }}, to:{{ message.to }}, message:{{ message.msg }}</span>
-                    <span v-if="message.type == 'file'">from: {{ message.from }}, to:{{ message.to }},message: <router-link :to="{ name: 'file', params: { fileId: 123 } }">User</router-link></span>
-                  </li>
-                </ul>
-            </div>
-            <div class="file-box">
-               <span @click="dialogVisible = true"><i class="el-icon-message"></i></span> 
-            </div>
-            <textarea class="inputMessage" @keydown.enter="submit(msg)" v-model="msg" placeholder="Type here..." />
-            <el-dialog
-              title="课件选择"
-              :visible.sync="dialogVisible"
-              size="tiny">
-              <div class="block">
-                <el-button type="success" @click="sendFile('56e61a5c78e74dc9ac0c0359efe0c75f')">课件1</el-button>
-                <el-button type="warning" @click="sendFile('6b96aebadf6444fe8336a21d05965a6a')">课件2</el-button>
-                <el-button type="danger" @click="sendFile('e6d0007015f842e7b946d33fafe286b9')">课件3</el-button>
-                <el-button type="info" @click="sendFile('1f4991567c9841e3ab5bc37302936afe')">课件4</el-button>
-              </div>
-            </el-dialog>
-        </el-col>
+      <el-col :span="5">
+        <div class="chat-info">
+          <button class="btn chat-btn" @click="chatClick('group')">群聊大厅</button>
+          <div> 昵称:{{ username }} </div>
+          <div> 当前在线人数: </div>
+          <el-menu mode="vertical" default-active="1" class="el-menu-vertical-demo">
+            <el-menu-item-group title="用户列表">
+              <el-menu-item v-bind:key="index" :index="user.name" v-for="(user, index) in userList">
+                <div @click="chatClick(user.name)">{{user.name}}
+                  <el-badge class="mark" :value="user.unread" />
+                </div>
+              </el-menu-item>
+            </el-menu-item-group>
+          </el-menu>
+          <button class="btn leave-btn" @click="leave">退出房间</button>
+        </div>
+      </el-col>
+      <el-col :span="19">
+        <div class="chatArea">
+          <ul class="messages">
+            <li v-bind:key="index" v-for="(message, index) in msgList[to]">
+              <span v-if="message.type == 'word'">from: {{ message.from }}, to:{{ message.to }}, message:{{ message.msg }}</span>
+              <span v-if="message.type == 'file'">{{ message.from }}给你发了一个课件噢，
+                <router-link :to="{ path: `file${message.msg}` }">到新页面查看</router-link>，
+                <!-- <el-button type="text" @click="fileDialog = true">在当前页面查看</el-button> -->
+                <!-- <el-dialog title="课件查看" :visible.sync="fileDialog">
+                  <player :resNo="message.msg"></player>
+                </el-dialog> -->
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div class="file-box">
+          <span @click="dialogVisible = true">
+            <i class="el-icon-message"></i>
+          </span>
+        </div>
+        <textarea class="inputMessage" @keydown.enter="submit(msg)" v-model="msg" placeholder="Type here..." />
+        <el-dialog title="课件选择" :visible.sync="dialogVisible" size="tiny">
+          <div class="block">
+            <el-button type="success" @click="sendFile('56e61a5c78e74dc9ac0c0359efe0c75f')">课件1</el-button>
+            <el-button type="warning" @click="sendFile('6b96aebadf6444fe8336a21d05965a6a')">课件2</el-button>
+            <el-button type="danger" @click="sendFile('e6d0007015f842e7b946d33fafe286b9')">课件3</el-button>
+            <el-button type="info" @click="sendFile('1f4991567c9841e3ab5bc37302936afe')">课件4</el-button>
+          </div>
+        </el-dialog>
+        
+      </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
 import io from 'socket.io-client';
+import Player from './Player.vue';
 
 export default {
+  components: {
+    Player,
+  },
   name: 'room',
   data() {
     return {
@@ -58,6 +68,7 @@ export default {
       to: '',
       msg: '',
       dialogVisible: false,
+      fileDialog: false,
       userList: [],
       privateList: [],
       msgList: {},
@@ -68,9 +79,9 @@ export default {
   },
   watch: {
     msgArr: {
-      handler: function (val, oldVal) { 
+      handler: function(val, oldVal) {
         console.log(val);
-       },
+      },
       deep: true
     }
   },
@@ -85,47 +96,47 @@ export default {
         console.log(users);
         this.userList = [];
         users.map((val) => {
-            if (val !== this.username) {    
-                console.log(this.userList);
-                this.userList.push({name: val, unread: 0});
-            }
+          if (val !== this.username) {
+            console.log(this.userList);
+            this.userList.push({ name: val, unread: 0 });
+          }
         });
         console.log(this.userList)
       })
       this.socket.on('msg', (from, to, msg, type) => {
         console.log(from, to, msg, type);
 
-        if (to == 'group') {  
-            if (!this.msgList['group']) {
-                this.$set(this.msgList, ['group'], []);
-            }
-            this.msgList['group'].push({from, to, msg, type});              
+        if (to == 'group') {
+          if (!this.msgList['group']) {
+            this.$set(this.msgList, ['group'], []);
+          }
+          this.msgList['group'].push({ from, to, msg, type });
         } else {
-            if (to == this.username) {
-                if (!this.msgList[from]) {
-                    this.$set(this.msgList, [from], []);
-                }
-                this.msgList[from].push({from, to, msg, type});
-            } else {
-                if (!this.msgList[to]) {
-                    this.$set(this.msgList, [to], []);
-                }
-                this.msgList[to].push({from, to, msg, type});
+          if (to == this.username) {
+            if (!this.msgList[from]) {
+              this.$set(this.msgList, [from], []);
             }
+            this.msgList[from].push({ from, to, msg, type });
+          } else {
+            if (!this.msgList[to]) {
+              this.$set(this.msgList, [to], []);
+            }
+            this.msgList[to].push({ from, to, msg, type });
+          }
         }
         if (this.to !== to && this.to !== from) {
-            console.log('提示消息', from);
-            this.userList.map((val) => {
-                if (val.name == from) {
-                    val.unread += 1;
-                }
-            });
-            console.log(this.userList);             
+          console.log('提示消息', from);
+          this.userList.map((val) => {
+            if (val.name == from) {
+              val.unread += 1;
+            }
+          });
+          console.log(this.userList);
         }
-        console.log(this.msgList); 
+        console.log(this.msgList);
       });
       this.socket.on('disconnect', () => {
-          console.log('disconnect');
+        console.log('disconnect');
       })
     })
   },
@@ -137,32 +148,34 @@ export default {
     chatClick(user) {
       this.to = user;
       this.userList.map((val) => {
-          if (val.name == user) {
-              val.unread = 0;
-          }
+        if (val.name == user) {
+          val.unread = 0;
+        }
       })
       if (!this.msgList[this.to]) {
         this.$set(this.msgList, [this.to], []);
-        console.log(this.msgList); 
+        console.log(this.msgList);
       }
     },
     leave() {
-        this.socket.emit('leave');
-        this.$router.push({name: 'login'});        
+      this.socket.emit('leave');
+      this.$router.push({ name: 'login' });
     },
     sendFile(resNo) {
-        this.dialogVisible = false;
-        this.socket.emit('message', this.username, this.to, resNo, 'file');        
+      this.dialogVisible = false;
+      this.socket.emit('message', this.username, this.to, resNo, 'file');
     }
   }
 }
 </script>
 
 <style lang="less">
-.el-row, .el-col {
+.el-row,
+.el-col {
   height: 100%;
   position: relative;
 }
+
 .leave-btn {
   position: absolute;
   bottom: 100px;
@@ -170,6 +183,7 @@ export default {
   margin-left: -29px;
   text-align: center;
 }
+
 .chat-msg {
   display: inline-block;
   margin-left: 10px;
@@ -178,7 +192,7 @@ export default {
   background-color: darkgreen;
   color: #fff;
   position: relative;
-  min-height: 28px;  
+  min-height: 28px;
   &:before {
     content: '';
     position: absolute;
@@ -191,6 +205,7 @@ export default {
     border-color: transparent darkgreen transparent transparent;
   }
 }
+
 .file-box {
   position: absolute;
   left: -6px;

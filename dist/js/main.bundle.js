@@ -63747,173 +63747,189 @@ exports.push([module.i, "\n.el-row,\n.el-col {\n  height: 100%;\n  position: rel
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _socket = __webpack_require__(451);
 
 var _socket2 = _interopRequireDefault(_socket);
 
+var _Player = __webpack_require__(477);
+
+var _Player2 = _interopRequireDefault(_Player);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 exports.default = {
-    name: 'room',
-    data: function data() {
-        return {
-            username: '',
-            to: '',
-            msg: '',
-            dialogVisible: false,
-            userList: [],
-            privateList: [],
-            msgList: {},
-            msgArr: [],
-            socket: '',
-            unread: {}
-        };
-    },
+  components: {
+    Player: _Player2.default
+  },
+  name: 'room',
+  data: function data() {
+    return {
+      username: '',
+      to: '',
+      msg: '',
+      dialogVisible: false,
+      fileDialog: false,
+      userList: [],
+      privateList: [],
+      msgList: {},
+      msgArr: [],
+      socket: '',
+      unread: {}
+    };
+  },
 
-    watch: {
-        msgArr: {
-            handler: function handler(val, oldVal) {
-                console.log(val);
-            },
-            deep: true
-        }
-    },
-    created: function created() {
-        var _this = this;
-
-        this.socket = _socket2.default.connect('127.0.0.1:8099');
-        this.username = this.$cookie.get('userName');
-
-        this.socket.on('connect', function () {
-            console.log('connect');
-            _this.socket.emit('user join', _this.username);
-            _this.socket.on('user join', function (users) {
-                console.log(users);
-                _this.userList = [];
-                users.map(function (val) {
-                    if (val !== _this.username) {
-                        console.log(_this.userList);
-                        _this.userList.push({ name: val, unread: 0 });
-                    }
-                });
-                console.log(_this.userList);
-            });
-            _this.socket.on('msg', function (from, to, msg, type) {
-                console.log(from, to, msg, type);
-
-                if (to == 'group') {
-                    if (!_this.msgList['group']) {
-                        _this.$set(_this.msgList, ['group'], []);
-                    }
-                    _this.msgList['group'].push({ from: from, to: to, msg: msg, type: type });
-                } else {
-                    if (to == _this.username) {
-                        if (!_this.msgList[from]) {
-                            _this.$set(_this.msgList, [from], []);
-                        }
-                        _this.msgList[from].push({ from: from, to: to, msg: msg, type: type });
-                    } else {
-                        if (!_this.msgList[to]) {
-                            _this.$set(_this.msgList, [to], []);
-                        }
-                        _this.msgList[to].push({ from: from, to: to, msg: msg, type: type });
-                    }
-                }
-                if (_this.to !== to && _this.to !== from) {
-                    console.log('提示消息', from);
-                    _this.userList.map(function (val) {
-                        if (val.name == from) {
-                            val.unread += 1;
-                        }
-                    });
-                    console.log(_this.userList);
-                }
-                console.log(_this.msgList);
-            });
-            _this.socket.on('disconnect', function () {
-                console.log('disconnect');
-            });
-        });
-    },
-
-    methods: {
-        submit: function submit(msg) {
-            this.socket.emit('message', this.username, this.to, msg, 'word');
-            console.log(this.msgList);
-        },
-        chatClick: function chatClick(user) {
-            this.to = user;
-            this.userList.map(function (val) {
-                if (val.name == user) {
-                    val.unread = 0;
-                }
-            });
-            if (!this.msgList[this.to]) {
-                this.$set(this.msgList, [this.to], []);
-                console.log(this.msgList);
-            }
-        },
-        leave: function leave() {
-            this.socket.emit('leave');
-            this.$router.push({ name: 'login' });
-        },
-        sendFile: function sendFile(resNo) {
-            this.dialogVisible = false;
-            this.socket.emit('message', this.username, this.to, resNo, 'file');
-        }
+  watch: {
+    msgArr: {
+      handler: function handler(val, oldVal) {
+        console.log(val);
+      },
+      deep: true
     }
-}; //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+  },
+  created: function created() {
+    var _this = this;
+
+    this.socket = _socket2.default.connect('127.0.0.1:8099');
+    this.username = this.$cookie.get('userName');
+
+    this.socket.on('connect', function () {
+      console.log('connect');
+      _this.socket.emit('user join', _this.username);
+      _this.socket.on('user join', function (users) {
+        console.log(users);
+        _this.userList = [];
+        users.map(function (val) {
+          if (val !== _this.username) {
+            console.log(_this.userList);
+            _this.userList.push({ name: val, unread: 0 });
+          }
+        });
+        console.log(_this.userList);
+      });
+      _this.socket.on('msg', function (from, to, msg, type) {
+        console.log(from, to, msg, type);
+
+        if (to == 'group') {
+          if (!_this.msgList['group']) {
+            _this.$set(_this.msgList, ['group'], []);
+          }
+          _this.msgList['group'].push({ from: from, to: to, msg: msg, type: type });
+        } else {
+          if (to == _this.username) {
+            if (!_this.msgList[from]) {
+              _this.$set(_this.msgList, [from], []);
+            }
+            _this.msgList[from].push({ from: from, to: to, msg: msg, type: type });
+          } else {
+            if (!_this.msgList[to]) {
+              _this.$set(_this.msgList, [to], []);
+            }
+            _this.msgList[to].push({ from: from, to: to, msg: msg, type: type });
+          }
+        }
+        if (_this.to !== to && _this.to !== from) {
+          console.log('提示消息', from);
+          _this.userList.map(function (val) {
+            if (val.name == from) {
+              val.unread += 1;
+            }
+          });
+          console.log(_this.userList);
+        }
+        console.log(_this.msgList);
+      });
+      _this.socket.on('disconnect', function () {
+        console.log('disconnect');
+      });
+    });
+  },
+
+  methods: {
+    submit: function submit(msg) {
+      this.socket.emit('message', this.username, this.to, msg, 'word');
+      console.log(this.msgList);
+    },
+    chatClick: function chatClick(user) {
+      this.to = user;
+      this.userList.map(function (val) {
+        if (val.name == user) {
+          val.unread = 0;
+        }
+      });
+      if (!this.msgList[this.to]) {
+        this.$set(this.msgList, [this.to], []);
+        console.log(this.msgList);
+      }
+    },
+    leave: function leave() {
+      this.socket.emit('leave');
+      this.$router.push({ name: 'login' });
+    },
+    sendFile: function sendFile(resNo) {
+      this.dialogVisible = false;
+      this.socket.emit('message', this.username, this.to, resNo, 'file');
+    }
+  }
+};
 
 /***/ }),
 /* 451 */
@@ -67120,7 +67136,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
           _vm.chatClick(user.name)
         }
       }
-    }, [_vm._v(_vm._s(user.name) + "\n                      "), _c('el-badge', {
+    }, [_vm._v(_vm._s(user.name) + "\n                "), _c('el-badge', {
       staticClass: "mark",
       attrs: {
         "value": user.unread
@@ -67142,16 +67158,13 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
   }, _vm._l((_vm.msgList[_vm.to]), function(message, index) {
     return _c('li', {
       key: index
-    }, [(message.type == 'word') ? _c('span', [_vm._v("from: " + _vm._s(message.from) + ", to:" + _vm._s(message.to) + ", message:" + _vm._s(message.msg))]) : _vm._e(), _vm._v(" "), (message.type == 'file') ? _c('span', [_vm._v("from: " + _vm._s(message.from) + ", to:" + _vm._s(message.to) + ",message: "), _c('router-link', {
+    }, [(message.type == 'word') ? _c('span', [_vm._v("from: " + _vm._s(message.from) + ", to:" + _vm._s(message.to) + ", message:" + _vm._s(message.msg))]) : _vm._e(), _vm._v(" "), (message.type == 'file') ? _c('span', [_vm._v(_vm._s(message.from) + "给你发了一个课件噢，\n              "), _c('router-link', {
       attrs: {
         "to": {
-          name: 'file',
-          params: {
-            fileId: 123
-          }
+          path: ("file" + (message.msg))
         }
       }
-    }, [_vm._v("User")])], 1) : _vm._e()])
+    }, [_vm._v("到新页面查看")]), _vm._v("，\n              ")], 1) : _vm._e()])
   }))]), _vm._v(" "), _c('div', {
     staticClass: "file-box"
   }, [_c('span', {
