@@ -67143,7 +67143,15 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     }, [_vm._v("\n                  from: " + _vm._s(message.from) + ", to:" + _vm._s(message.to) + ", message:" + _vm._s(message.msg) + "\n                ")])
   }))]), _vm._v(" "), _c('div', {
     staticClass: "file-box"
-  }), _vm._v(" "), _c('textarea', {
+  }, [_c('span', {
+    on: {
+      "click": function($event) {
+        _vm.dialogVisible = true
+      }
+    }
+  }, [_c('i', {
+    staticClass: "el-icon-message"
+  })])]), _vm._v(" "), _c('textarea', {
     directives: [{
       name: "model",
       rawName: "v-model",

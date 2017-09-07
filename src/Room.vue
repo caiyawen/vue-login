@@ -27,7 +27,7 @@
                 </ul>
             </div>
             <div class="file-box">
-              <!-- <span @click="dialogVisible = true"><i class="el-icon-message"></i></span> -->
+               <span @click="dialogVisible = true"><i class="el-icon-message"></i></span> 
             </div>
             <textarea class="inputMessage" @keydown.enter="submit(msg)" v-model="msg" placeholder="Type here..." />
             <el-dialog
