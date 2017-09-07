@@ -63407,14 +63407,10 @@ var routes = [{
     component: _Room2.default,
     name: 'room',
     childen: [{
-        path: 'group',
-        component: _Group2.default,
-        name: 'group'
+        path: '/file/:fileId',
+        component: _Player2.default,
+        name: 'file'
     }]
-}, {
-    path: '/player/:id',
-    component: _Player2.default,
-    name: 'player'
 }];
 
 exports.default = routes;
@@ -63806,24 +63802,25 @@ exports.default = {
                 });
                 console.log(_this.userList);
             });
-            _this.socket.on('msg', function (from, to, msg) {
-                console.log(from, to, msg);
+            _this.socket.on('msg', function (from, to, msg, type) {
+                console.log(from, to, msg, type);
+
                 if (to == 'group') {
                     if (!_this.msgList['group']) {
                         _this.$set(_this.msgList, ['group'], []);
                     }
-                    _this.msgList['group'].push({ from: from, to: to, msg: msg });
+                    _this.msgList['group'].push({ from: from, to: to, msg: msg, type: type });
                 } else {
                     if (to == _this.username) {
                         if (!_this.msgList[from]) {
                             _this.$set(_this.msgList, [from], []);
                         }
-                        _this.msgList[from].push({ from: from, to: to, msg: msg });
+                        _this.msgList[from].push({ from: from, to: to, msg: msg, type: type });
                     } else {
                         if (!_this.msgList[to]) {
                             _this.$set(_this.msgList, [to], []);
                         }
-                        _this.msgList[to].push({ from: from, to: to, msg: msg });
+                        _this.msgList[to].push({ from: from, to: to, msg: msg, type: type });
                     }
                 }
                 if (_this.to !== to && _this.to !== from) {
@@ -63845,7 +63842,7 @@ exports.default = {
 
     methods: {
         submit: function submit(msg) {
-            this.socket.emit('message', this.username, this.to, msg);
+            this.socket.emit('message', this.username, this.to, msg, 'word');
             console.log(this.msgList);
         },
         chatClick: function chatClick(user) {
@@ -63863,9 +63860,14 @@ exports.default = {
         leave: function leave() {
             this.socket.emit('leave');
             this.$router.push({ name: 'login' });
+        },
+        sendFile: function sendFile(resNo) {
+            this.dialogVisible = false;
+            this.socket.emit('message', this.username, this.to, resNo, 'file');
         }
     }
 }; //
+//
 //
 //
 //
@@ -67107,8 +67109,9 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     attrs: {
       "title": "用户列表"
     }
-  }, _vm._l((_vm.userList), function(user) {
+  }, _vm._l((_vm.userList), function(user, index) {
     return _c('el-menu-item', {
+      key: index,
       attrs: {
         "index": user.name
       }
@@ -67140,7 +67143,16 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
   }, _vm._l((_vm.msgList[_vm.to]), function(message, index) {
     return _c('li', {
       key: index
-    }, [_vm._v("\n                  from: " + _vm._s(message.from) + ", to:" + _vm._s(message.to) + ", message:" + _vm._s(message.msg) + "\n                ")])
+    }, [(message.type == 'word') ? _c('span', [_vm._v("from: " + _vm._s(message.from) + ", to:" + _vm._s(message.to) + ", message:" + _vm._s(message.msg))]) : _vm._e(), _vm._v(" "), (message.type == 'file') ? _c('span', [_vm._v("from: " + _vm._s(message.from) + ", to:" + _vm._s(message.to) + ",message: "), _c('router-link', {
+      attrs: {
+        "to": {
+          name: 'file',
+          params: {
+            fileId: 123
+          }
+        }
+      }
+    }, [_vm._v("User")])], 1) : _vm._e()])
   }))]), _vm._v(" "), _c('div', {
     staticClass: "file-box"
   }, [_c('span', {

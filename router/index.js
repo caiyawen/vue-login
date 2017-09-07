@@ -12,14 +12,10 @@ const routes = [{
     component: Room,
     name: 'room',
     childen: [{
-        path: 'group',
-        component: Group,
-        name: 'group',
+      path: '/file/:fileId',
+      component: Player,
+      name: 'file',
     }],
-}, {
-    path: '/player/:id',
-    component: Player,
-    name: 'player',
 }];
 
 export default routes;

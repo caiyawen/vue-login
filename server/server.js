@@ -113,14 +113,14 @@ io.on('connection', function(socket) {
         io.emit('user join', users);
         // sendmsg(username);
     });
-    socket.on('message', function(from, to, msg) {
+    socket.on('message', function(from, to, msg, type) {
         var target = arrAllSocket[to];
         var fromTarget = arrAllSocket[from];
         if (target) {
-            target.emit('msg', from, to, msg);
-            fromTarget.emit('msg', from, to, msg);
+            target.emit('msg', from, to, msg, type);
+            fromTarget.emit('msg', from, to, msg, type);
         } else {
-            io.emit('msg', from, to, msg);
+            io.emit('msg', from, to, msg, type);
             console.log('群聊');
         }
     });

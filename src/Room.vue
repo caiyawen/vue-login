@@ -8,7 +8,7 @@
               <div> 当前在线人数: </div>
               <el-menu mode="vertical" default-active="1" class="el-menu-vertical-demo">
                 <el-menu-item-group title="用户列表">
-                  <el-menu-item :index="user.name" v-for="user in userList">
+                  <el-menu-item v-bind:key="index" :index="user.name" v-for="(user, index) in userList">
                     <div @click="chatClick(user.name)">{{user.name}}
                         <el-badge class="mark" :value="user.unread" />
                     </div>
@@ -22,7 +22,8 @@
             <div class="chatArea">
                 <ul class="messages">
                   <li v-bind:key="index" v-for="(message, index) in msgList[to]">
-                    from: {{ message.from }}, to:{{ message.to }}, message:{{ message.msg }}
+                    <span v-if="message.type == 'word'">from: {{ message.from }}, to:{{ message.to }}, message:{{ message.msg }}</span>
+                    <span v-if="message.type == 'file'">from: {{ message.from }}, to:{{ message.to }},message: <router-link :to="{ name: 'file', params: { fileId: 123 } }">User</router-link></span>
                   </li>
                 </ul>
             </div>
@@ -76,7 +77,7 @@ export default {
   created() {
     this.socket = io.connect('127.0.0.1:8099');
     this.username = this.$cookie.get('userName');
-    
+
     this.socket.on('connect', () => {
       console.log('connect');
       this.socket.emit('user join', this.username);
@@ -91,24 +92,25 @@ export default {
         });
         console.log(this.userList)
       })
-      this.socket.on('msg', (from, to, msg) => {
-        console.log(from, to, msg);
+      this.socket.on('msg', (from, to, msg, type) => {
+        console.log(from, to, msg, type);
+
         if (to == 'group') {  
             if (!this.msgList['group']) {
                 this.$set(this.msgList, ['group'], []);
             }
-            this.msgList['group'].push({from, to, msg});              
+            this.msgList['group'].push({from, to, msg, type});              
         } else {
             if (to == this.username) {
                 if (!this.msgList[from]) {
                     this.$set(this.msgList, [from], []);
                 }
-                this.msgList[from].push({from, to, msg});
+                this.msgList[from].push({from, to, msg, type});
             } else {
                 if (!this.msgList[to]) {
                     this.$set(this.msgList, [to], []);
                 }
-                this.msgList[to].push({from, to, msg});
+                this.msgList[to].push({from, to, msg, type});
             }
         }
         if (this.to !== to && this.to !== from) {
@@ -129,7 +131,7 @@ export default {
   },
   methods: {
     submit(msg) {
-      this.socket.emit('message', this.username, this.to, msg);
+      this.socket.emit('message', this.username, this.to, msg, 'word');
       console.log(this.msgList);
     },
     chatClick(user) {
@@ -147,6 +149,10 @@ export default {
     leave() {
         this.socket.emit('leave');
         this.$router.push({name: 'login'});        
+    },
+    sendFile(resNo) {
+        this.dialogVisible = false;
+        this.socket.emit('message', this.username, this.to, resNo, 'file');        
     }
   }
 }
