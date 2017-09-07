@@ -107,6 +107,7 @@ io.on('connection', function(socket) {
         if (users.indexOf(username) == -1) {
             users.push(username);
         }
+        console.log(users);
         user = username;
         arrAllSocket[user] = socket;
         io.emit('user join', users);

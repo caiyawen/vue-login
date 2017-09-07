@@ -63773,7 +63773,8 @@ exports.default = {
       privateList: [],
       msgList: {},
       msgArr: [],
-      socket: ''
+      socket: '',
+      unread: {}
     };
   },
 
@@ -63795,11 +63796,20 @@ exports.default = {
       console.log('connect');
       _this.socket.emit('user join', _this.username);
       _this.socket.on('user join', function (users) {
-        _this.userList = users;
+        console.log(users);
+        _this.userList = [];
+        users.map(function (val) {
+          console.log(_this.userList);
+          _this.userList.push({ name: val, unread: 0 });
+        });
+        console.log(_this.userList);
       });
       _this.socket.on('msg', function (from, to, msg) {
         console.log(from, to, msg);
         if (to == 'group') {
+          if (!_this.msgList['group']) {
+            _this.$set(_this.msgList, ['group'], []);
+          }
           _this.msgList['group'].push({ from: from, to: to, msg: msg });
         } else {
           if (to == _this.username) {
@@ -63814,6 +63824,15 @@ exports.default = {
             _this.msgList[to].push({ from: from, to: to, msg: msg });
           }
         }
+        if (_this.to !== to && _this.to !== from) {
+          console.log('提示消息', from);
+          _this.userList.map(function (val) {
+            if (val.name == from) {
+              val.unread += 1;
+            }
+          });
+          console.log(_this.userList);
+        }
         console.log(_this.msgList);
       });
     });
@@ -63826,6 +63845,11 @@ exports.default = {
     },
     chatClick: function chatClick(user) {
       this.to = user;
+      this.userList.map(function (val) {
+        if (val.name == user) {
+          val.unread = 0;
+        }
+      });
       if (!this.msgList[this.to]) {
         this.$set(this.msgList, [this.to], []);
         console.log(this.msgList);
@@ -63834,6 +63858,8 @@ exports.default = {
     leave: function leave() {}
   }
 }; //
+//
+//
 //
 //
 //
@@ -67073,19 +67099,23 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     attrs: {
       "title": "用户列表"
     }
-  }, _vm._l((_vm.userList), function(user, index) {
+  }, _vm._l((_vm.userList), function(user) {
     return _c('el-menu-item', {
-      key: index,
       attrs: {
-        "index": "index"
+        "index": user.name
       }
     }, [_c('div', {
       on: {
         "click": function($event) {
-          _vm.chatClick(user)
+          _vm.chatClick(user.name)
         }
       }
-    }, [_vm._v(_vm._s(user))])])
+    }, [_vm._v(_vm._s(user.name) + "\n                      "), _c('el-badge', {
+      staticClass: "mark",
+      attrs: {
+        "value": user.unread
+      }
+    })], 1)])
   }))], 1), _vm._v(" "), _c('button', {
     staticClass: "btn leave-btn",
     on: {

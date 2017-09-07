@@ -8,8 +8,10 @@
               <div> 当前在线人数: </div>
               <el-menu mode="vertical" default-active="1" class="el-menu-vertical-demo">
                 <el-menu-item-group title="用户列表">
-                  <el-menu-item v-bind:key="index" index="index" v-for="(user, index) in userList">
-                    <div @click="chatClick(user)">{{user}}</div>
+                  <el-menu-item :index="user.name" v-for="user in userList">
+                    <div @click="chatClick(user.name)">{{user.name}}
+                        <el-badge class="mark" :value="user.unread" />
+                    </div>
                   </el-menu-item>
                 </el-menu-item-group>
               </el-menu> 
@@ -60,6 +62,7 @@ export default {
       msgList: {},
       msgArr: [],
       socket: '',
+      unread: {},
     }
   },
   watch: {
@@ -78,11 +81,20 @@ export default {
       console.log('connect');
       this.socket.emit('user join', this.username);
       this.socket.on('user join', (users) => {
-        this.userList = users;
+        console.log(users);
+        this.userList = [];
+        users.map((val) => {
+            console.log(this.userList);
+            this.userList.push({name: val, unread: 0});
+        });
+        console.log(this.userList)
       })
       this.socket.on('msg', (from, to, msg) => {
         console.log(from, to, msg);
         if (to == 'group') {  
+            if (!this.msgList['group']) {
+                this.$set(this.msgList, ['group'], []);
+            }
             this.msgList['group'].push({from, to, msg});              
         } else {
             if (to == this.username) {
@@ -97,6 +109,15 @@ export default {
                 this.msgList[to].push({from, to, msg});
             }
         }
+        if (this.to !== to && this.to !== from) {
+            console.log('提示消息', from);
+            this.userList.map((val) => {
+                if (val.name == from) {
+                    val.unread += 1;
+                }
+            });
+            console.log(this.userList);             
+        }
         console.log(this.msgList); 
       })
     })
@@ -108,6 +129,11 @@ export default {
     },
     chatClick(user) {
       this.to = user;
+      this.userList.map((val) => {
+          if (val.name == user) {
+              val.unread = 0;
+          }
+      })
       if (!this.msgList[this.to]) {
         this.$set(this.msgList, [this.to], []);
         console.log(this.msgList); 
