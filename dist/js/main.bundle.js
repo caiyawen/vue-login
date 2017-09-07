@@ -63405,12 +63405,11 @@ var routes = [{
 }, {
     path: '/room',
     component: _Room2.default,
-    name: 'room',
-    childen: [{
-        path: '/file/:fileId',
-        component: _Player2.default,
-        name: 'file'
-    }]
+    name: 'room'
+}, {
+    path: '/file/:fileId',
+    component: _Player2.default,
+    name: 'file'
 }];
 
 exports.default = routes;

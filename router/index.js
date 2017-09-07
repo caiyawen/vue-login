@@ -11,11 +11,10 @@ const routes = [{
     path: '/room',
     component: Room,
     name: 'room',
-    childen: [{
-      path: '/file/:fileId',
-      component: Player,
-      name: 'file',
-    }],
+}, {
+    path: '/file/:fileId',
+    component: Player,
+    name: 'file',
 }];
 
 export default routes;
