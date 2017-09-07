@@ -9,6 +9,10 @@ var bodyParser = require('body-parser');
 var server = require('http').createServer(App);
 var io = require('socket.io')(server);
 const QiQiuYun = require('qiqiuyun-sdk');
+var superagent = require('superagent');
+var request = require("request");
+var cheerio = require('cheerio');
+var fs = require('fs'); 
 
 App.use(bodyParser.json());
 App.use(bodyParser.urlencoded({ extended: false }));
@@ -146,6 +150,30 @@ io.on('connection', function(socket) {
     // })
 });
 
+//爬取头像图片
+superagent.get('http://www.ui.cn/').end(function(err, docs) {
+  var $ = cheerio.load(docs.text);
+  var imgArr = [];
+  console.log($('.post li .cover a img').length);
+  $('.post li .cover a img').each(function(index, ele) {
+    var $el = $(ele);
+    imgArr.push($el.attr('data-original'));
+  });
+    console.log('imgArr', imgArr);
+    imgArr.map((val, index) => {
+      let file = val.split('/');
+      console.log(file[file.length - 1]);
+      downloadImg(val, file[file.length - 1]);
+    })
+})
+
+var dir = './image';
+var downloadImg = function(url, filename){
+     request.get(url).on('response', function(response) {
+       console.log(response.statusCode);
+       console.log(response.headers['content-type']);
+     }).pipe(fs.createWriteStream(dir + "/" + filename));
+};
 
 const port = '8099';
 const url = 'http://localhost:8099';

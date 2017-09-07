@@ -63839,36 +63839,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 exports.default = {
   components: {
@@ -67184,7 +67154,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     attrs: {
       "title": "用户列表"
     }
-  }, [_vm._l((_vm.userList), function(user, index) {
+  }, _vm._l((_vm.userList), function(user, index) {
     return _c('el-menu-item', {
       key: index,
       attrs: {
@@ -67202,115 +67172,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
         "value": user.unread
       }
     })], 1)])
-  }), _vm._v(" "), _vm._l((_vm.userList), function(user, index) {
-    return _c('el-menu-item', {
-      key: index,
-      attrs: {
-        "index": user.name
-      }
-    }, [_c('div', {
-      on: {
-        "click": function($event) {
-          _vm.chatClick(user.name)
-        }
-      }
-    }, [_vm._v(_vm._s(user.name) + "\n                "), _c('el-badge', {
-      staticClass: "mark",
-      attrs: {
-        "value": user.unread
-      }
-    })], 1)])
-  }), _vm._v(" "), _vm._l((_vm.userList), function(user, index) {
-    return _c('el-menu-item', {
-      key: index,
-      attrs: {
-        "index": user.name
-      }
-    }, [_c('div', {
-      on: {
-        "click": function($event) {
-          _vm.chatClick(user.name)
-        }
-      }
-    }, [_vm._v(_vm._s(user.name) + "\n                "), _c('el-badge', {
-      staticClass: "mark",
-      attrs: {
-        "value": user.unread
-      }
-    })], 1)])
-  }), _vm._v(" "), _vm._l((_vm.userList), function(user, index) {
-    return _c('el-menu-item', {
-      key: index,
-      attrs: {
-        "index": user.name
-      }
-    }, [_c('div', {
-      on: {
-        "click": function($event) {
-          _vm.chatClick(user.name)
-        }
-      }
-    }, [_vm._v(_vm._s(user.name) + "\n                "), _c('el-badge', {
-      staticClass: "mark",
-      attrs: {
-        "value": user.unread
-      }
-    })], 1)])
-  }), _vm._v(" "), _vm._l((_vm.userList), function(user, index) {
-    return _c('el-menu-item', {
-      key: index,
-      attrs: {
-        "index": user.name
-      }
-    }, [_c('div', {
-      on: {
-        "click": function($event) {
-          _vm.chatClick(user.name)
-        }
-      }
-    }, [_vm._v(_vm._s(user.name) + "\n                "), _c('el-badge', {
-      staticClass: "mark",
-      attrs: {
-        "value": user.unread
-      }
-    })], 1)])
-  }), _vm._v(" "), _vm._l((_vm.userList), function(user, index) {
-    return _c('el-menu-item', {
-      key: index,
-      attrs: {
-        "index": user.name
-      }
-    }, [_c('div', {
-      on: {
-        "click": function($event) {
-          _vm.chatClick(user.name)
-        }
-      }
-    }, [_vm._v(_vm._s(user.name) + "\n                "), _c('el-badge', {
-      staticClass: "mark",
-      attrs: {
-        "value": user.unread
-      }
-    })], 1)])
-  }), _vm._v(" "), _vm._l((_vm.userList), function(user, index) {
-    return _c('el-menu-item', {
-      key: index,
-      attrs: {
-        "index": user.name
-      }
-    }, [_c('div', {
-      on: {
-        "click": function($event) {
-          _vm.chatClick(user.name)
-        }
-      }
-    }, [_vm._v(_vm._s(user.name) + "\n                "), _c('el-badge', {
-      staticClass: "mark",
-      attrs: {
-        "value": user.unread
-      }
-    })], 1)])
-  })], 2)], 1), _vm._v(" "), _c('button', {
+  }))], 1), _vm._v(" "), _c('button', {
     staticClass: "btn leave-btn",
     on: {
       "click": _vm.leave

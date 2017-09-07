@@ -15,36 +15,6 @@
                   <el-badge class="mark" :value="user.unread" />
                 </div>
               </el-menu-item>
-              <el-menu-item v-bind:key="index" :index="user.name" v-for="(user, index) in userList">
-                <div @click="chatClick(user.name)">{{user.name}}
-                  <el-badge class="mark" :value="user.unread" />
-                </div>
-              </el-menu-item>
-              <el-menu-item v-bind:key="index" :index="user.name" v-for="(user, index) in userList">
-                <div @click="chatClick(user.name)">{{user.name}}
-                  <el-badge class="mark" :value="user.unread" />
-                </div>
-              </el-menu-item>
-              <el-menu-item v-bind:key="index" :index="user.name" v-for="(user, index) in userList">
-                <div @click="chatClick(user.name)">{{user.name}}
-                  <el-badge class="mark" :value="user.unread" />
-                </div>
-              </el-menu-item>
-              <el-menu-item v-bind:key="index" :index="user.name" v-for="(user, index) in userList">
-                <div @click="chatClick(user.name)">{{user.name}}
-                  <el-badge class="mark" :value="user.unread" />
-                </div>
-              </el-menu-item>
-              <el-menu-item v-bind:key="index" :index="user.name" v-for="(user, index) in userList">
-                <div @click="chatClick(user.name)">{{user.name}}
-                  <el-badge class="mark" :value="user.unread" />
-                </div>
-              </el-menu-item>
-              <el-menu-item v-bind:key="index" :index="user.name" v-for="(user, index) in userList">
-                <div @click="chatClick(user.name)">{{user.name}}
-                  <el-badge class="mark" :value="user.unread" />
-                </div>
-              </el-menu-item>
             </el-menu-item-group>
           </el-menu>
           <button class="btn leave-btn" @click="leave">退出房间</button>
