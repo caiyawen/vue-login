@@ -14,6 +14,12 @@ var request = require("request");
 var cheerio = require('cheerio');
 var fs = require('fs'); 
 
+var users = [];
+var usersArr = [];
+var arrAllSocket = [];
+var avatarImgArr = [];
+var filesUrlArr = [];
+
 App.use(bodyParser.json());
 App.use(bodyParser.urlencoded({ extended: false }));
 
@@ -102,20 +108,20 @@ function sendUserMsg(data) {
 }
 
 //socket连接
-var users = [];
-var arrAllSocket = [];
+
 io.on('connection', function(socket) {
     console.log('connection.');
     socket.on('user join', function(username) {
-        console.log('user join');
+        console.log('user join111111', avatarImgArr);
         if (users.indexOf(username) == -1) {
             users.push(username);
+            usersArr.push({name: username, avatar: avatarImgArr[Math.ceil(Math.random() * 20)]})
         }
         console.log(users);
         user = username;
         arrAllSocket[user] = socket;
-        io.emit('user join', users);
-        // sendmsg(username);
+        io.emit('user join', usersArr);
+        console.log('user join', usersArr)
     });
     socket.on('message', function(from, to, msg, type) {
         var target = arrAllSocket[to];
@@ -153,25 +159,24 @@ io.on('connection', function(socket) {
 //爬取头像图片
 superagent.get('http://www.ui.cn/').end(function(err, docs) {
   var $ = cheerio.load(docs.text);
-  var imgArr = [];
   console.log($('.post li .cover a img').length);
   $('.post li .cover a img').each(function(index, ele) {
     var $el = $(ele);
-    imgArr.push($el.attr('data-original'));
+    avatarImgArr.push($el.attr('data-original'));
   });
-    console.log('imgArr', imgArr);
-    imgArr.map((val, index) => {
-      let file = val.split('/');
-      console.log(file[file.length - 1]);
-      downloadImg(val, file[file.length - 1]);
+    // console.log('avatarImgArr', avatarImgArr);
+    avatarImgArr.map((val, index) => {
+      filesUrlArr = val.split('/');
+      // console.log(filesUrlArr[filesUrlArr.length - 1]);
+      downloadImg(val, filesUrlArr[filesUrlArr.length - 1]);
     })
 })
 
 var dir = './image';
 var downloadImg = function(url, filename){
      request.get(url).on('response', function(response) {
-       console.log(response.statusCode);
-       console.log(response.headers['content-type']);
+      //  console.log(response.statusCode);
+      //  console.log(response.headers['content-type']);
      }).pipe(fs.createWriteStream(dir + "/" + filename));
 };
 

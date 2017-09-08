@@ -6,12 +6,14 @@
           <button class="btn chat-btn" @click="chatClick('group')">群聊大厅</button>
           <div class="chat-intro">
             <div class="user-name">昵称:{{ username }} </div>
-            <div>当前在线人数: </div>
+            <div>当前在线人数: {{ userList.length }}</div>
           </div>
           <el-menu mode="vertical" default-active="1" class="el-menu-vertical-demo">
             <el-menu-item-group title="用户列表">
               <el-menu-item v-bind:key="index" :index="user.name" v-for="(user, index) in userList">
-                <div @click="chatClick(user.name)">{{user.name}}
+                <div @click="chatClick(user.name)">
+                  <img class="user-avatar" :src="user.avatar" alt="">
+                  {{user.name}}
                   <el-badge class="mark" :value="user.unread" />
                 </div>
               </el-menu-item>
@@ -120,9 +122,9 @@ export default {
         console.log(users);
         this.userList = [];
         users.map((val) => {
-          if (val !== this.username) {
-            console.log(this.userList);
-            this.userList.push({ name: val, unread: 0 });
+          if (val.name !== this.username) {
+            console.log('val', val);
+            this.userList.push({ name: val.name, avatar: val.avatar, unread: 0 });
           }
         });
         console.log(this.userList)
@@ -248,6 +250,12 @@ export default {
     .user-name {
       padding-bottom: 10px;
     }
+  }
+  .user-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      margin-right: 10px;
   }
 }
 

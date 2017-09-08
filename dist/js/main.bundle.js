@@ -63734,7 +63734,7 @@ exports = module.exports = __webpack_require__(78)(undefined);
 
 
 // module
-exports.push([module.i, "\n.chat-page {\n  width: 770px;\n  height: 640px;\n  margin: 30px auto;\n  box-shadow: 0 6px 30px #999;\n}\n.chat-page .el-row,\n.chat-page .el-col {\n  height: 100%;\n  padding: 0 !important;\n  margin: 0 !important;\n  position: relative;\n}\n.chat-page .chat-window {\n  background-color: #eee;\n}\n.chat-page .el-menu {\n  background-color: #f9f9f9;\n  overflow: scroll;\n  height: 548px;\n}\n.chat-page .el-menu .el-menu-item:hover,\n.chat-page .el-menu .el-menu-item.is-active {\n  background-color: #ddd;\n}\n.chat-page .inputMessage {\n  position: absolute;\n  bottom: 0;\n  height: 120px;\n  left: 0;\n  outline: 0;\n  border: 0;\n  padding-left: 10px;\n  width: 100%;\n  resize: none;\n}\n.chat-page .file-box {\n  position: absolute;\n  left: 0;\n  width: 100%;\n  padding: 10px;\n  bottom: 120px;\n  border-top: 1px solid #ddd;\n  border-bottom: 0;\n}\n.chat-page .chat-intro {\n  padding: 20px;\n  font-size: 14px;\n  border-bottom: 1px solid #e1e1e1;\n}\n.chat-page .chat-intro .user-name {\n  padding-bottom: 10px;\n}\n.leave-btn {\n  position: absolute;\n  bottom: 100px;\n  left: 50%;\n  margin-left: -29px;\n  text-align: center;\n}\n.chat-right {\n  text-align: right;\n}\n.chat-msg {\n  display: inline-block;\n  margin: 0 10px;\n  padding: 2px 8px;\n  border-radius: 5px;\n  background-color: darkgreen;\n  color: #fff;\n  position: relative;\n  min-height: 28px;\n}\n.chat-msg.right:before {\n  left: auto;\n  right: -5px;\n  border-width: 5px 0 5px 5px;\n  border-color: transparent transparent transparent darkgreen;\n}\n.chat-msg:before {\n  content: '';\n  position: absolute;\n  left: -5px;\n  top: 10px;\n  width: 0;\n  height: 0;\n  border-style: solid;\n  border-width: 5px 5px 5px 0;\n  border-color: transparent darkgreen transparent transparent;\n}\n", ""]);
+exports.push([module.i, "\n.chat-page {\n  width: 770px;\n  height: 640px;\n  margin: 30px auto;\n  box-shadow: 0 6px 30px #999;\n}\n.chat-page .el-row,\n.chat-page .el-col {\n  height: 100%;\n  padding: 0 !important;\n  margin: 0 !important;\n  position: relative;\n}\n.chat-page .chat-window {\n  background-color: #eee;\n}\n.chat-page .el-menu {\n  background-color: #f9f9f9;\n  overflow: scroll;\n  height: 548px;\n}\n.chat-page .el-menu .el-menu-item:hover,\n.chat-page .el-menu .el-menu-item.is-active {\n  background-color: #ddd;\n}\n.chat-page .inputMessage {\n  position: absolute;\n  bottom: 0;\n  height: 120px;\n  left: 0;\n  outline: 0;\n  border: 0;\n  padding-left: 10px;\n  width: 100%;\n  resize: none;\n}\n.chat-page .file-box {\n  position: absolute;\n  left: 0;\n  width: 100%;\n  padding: 10px;\n  bottom: 120px;\n  border-top: 1px solid #ddd;\n  border-bottom: 0;\n}\n.chat-page .chat-intro {\n  padding: 20px;\n  font-size: 14px;\n  border-bottom: 1px solid #e1e1e1;\n}\n.chat-page .chat-intro .user-name {\n  padding-bottom: 10px;\n}\n.chat-page .user-avatar {\n  width: 30px;\n  height: 30px;\n  border-radius: 50%;\n  margin-right: 10px;\n}\n.leave-btn {\n  position: absolute;\n  bottom: 100px;\n  left: 50%;\n  margin-left: -29px;\n  text-align: center;\n}\n.chat-right {\n  text-align: right;\n}\n.chat-msg {\n  display: inline-block;\n  margin: 0 10px;\n  padding: 2px 8px;\n  border-radius: 5px;\n  background-color: darkgreen;\n  color: #fff;\n  position: relative;\n  min-height: 28px;\n}\n.chat-msg.right:before {\n  left: auto;\n  right: -5px;\n  border-width: 5px 0 5px 5px;\n  border-color: transparent transparent transparent darkgreen;\n}\n.chat-msg:before {\n  content: '';\n  position: absolute;\n  left: -5px;\n  top: 10px;\n  width: 0;\n  height: 0;\n  border-style: solid;\n  border-width: 5px 5px 5px 0;\n  border-color: transparent darkgreen transparent transparent;\n}\n", ""]);
 
 // exports
 
@@ -63760,6 +63760,8 @@ var _Player2 = _interopRequireDefault(_Player);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
 //
 //
 //
@@ -63882,9 +63884,9 @@ exports.default = {
         console.log(users);
         _this.userList = [];
         users.map(function (val) {
-          if (val !== _this.username) {
-            console.log(_this.userList);
-            _this.userList.push({ name: val, unread: 0 });
+          if (val.name !== _this.username) {
+            console.log('val', val);
+            _this.userList.push({ name: val.name, avatar: val.avatar, unread: 0 });
           }
         });
         console.log(_this.userList);
@@ -67144,7 +67146,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
     staticClass: "chat-intro"
   }, [_c('div', {
     staticClass: "user-name"
-  }, [_vm._v("昵称:" + _vm._s(_vm.username) + " ")]), _vm._v(" "), _c('div', [_vm._v("当前在线人数: ")])]), _vm._v(" "), _c('el-menu', {
+  }, [_vm._v("昵称:" + _vm._s(_vm.username) + " ")]), _vm._v(" "), _c('div', [_vm._v("当前在线人数: " + _vm._s(_vm.userList.length))])]), _vm._v(" "), _c('el-menu', {
     staticClass: "el-menu-vertical-demo",
     attrs: {
       "mode": "vertical",
@@ -67166,7 +67168,13 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
           _vm.chatClick(user.name)
         }
       }
-    }, [_vm._v(_vm._s(user.name) + "\n                "), _c('el-badge', {
+    }, [_c('img', {
+      staticClass: "user-avatar",
+      attrs: {
+        "src": user.avatar,
+        "alt": ""
+      }
+    }), _vm._v("\n                " + _vm._s(user.name) + "\n                "), _c('el-badge', {
       staticClass: "mark",
       attrs: {
         "value": user.unread
