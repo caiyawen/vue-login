@@ -174,11 +174,62 @@ superagent.get('http://www.ui.cn/').end(function(err, docs) {
 
 var dir = './image';
 var downloadImg = function(url, filename){
-     request.get(url).on('response', function(response) {
-      //  console.log(response.statusCode);
-      //  console.log(response.headers['content-type']);
-     }).pipe(fs.createWriteStream(dir + "/" + filename));
+    // request.head(url).on('response', function(response) {
+    // //  console.log(response.statusCode);
+    // //  console.log(response.headers['content-type']);
+    // }).pipe(fs.createWriteStream(dir + "/" + filename));
+    request({
+      url: url,
+      headers: {
+        'Host': 'img0.imgtn.bdimg.com',
+        'Connection': 'keep-alive',
+        'Cache-Control': 'max-age=0',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',
+        'Accept-Encoding': 'gzip,deflate,sdch',
+        'Accept-Language': 'zh-CN,zh;q=0.8',
+        'If-None-Match': '90101f995236651aa74454922de2ad74',
+        'Referer': 'http://www.ui.cn/',
+        'If-Modified-Since': 'Thu, 01 Jan 1970 00:00:00 GMT',
+        'Proxy-Connection':'keep-alive',
+        'Cookie': 'Hm_lvt_cda1b423ea76ae745279bc4eb4734644=1504789096; Hm_lpvt_cda1b423ea76ae745279bc4eb4734644=1504789096',
+      }
+    }, function(error, response, body) {
+      console.log(response.statusCode);
+      console.log(response.headers['content-type']);
+      if (!error && response.statusCode == 200) {
+        var info = JSON.parse(body);
+        console.log(info.stargazers_count + " Stars");
+        console.log(info.forks_count + " Forks");
+      }
+    }).pipe(fs.createWriteStream(dir + "/" + filename));
 };
+
+var options = {
+  url: 'https://api.github.com/repos/request/request',
+  headers: {
+    'Host': 'img0.imgtn.bdimg.com',
+    'Connection': 'keep-alive',
+    'Cache-Control': 'max-age=0',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',
+    'Accept-Encoding': 'gzip,deflate,sdch',
+    'Accept-Language': 'zh-CN,zh;q=0.8',
+    'If-None-Match': '90101f995236651aa74454922de2ad74',
+    'Referer': 'http://www.ui.cn/',
+    'If-Modified-Since': 'Thu, 01 Jan 1970 00:00:00 GMT',
+    'Proxy-Connection':'keep-alive',
+    'Cookie': 'Hm_lvt_cda1b423ea76ae745279bc4eb4734644=1504789096; Hm_lpvt_cda1b423ea76ae745279bc4eb4734644=1504789096',
+  }
+};
+
+function callback(error, response, body) {
+  if (!error && response.statusCode == 200) {
+    var info = JSON.parse(body);
+    console.log(info.stargazers_count + " Stars");
+    console.log(info.forks_count + " Forks");
+  }
+}
 
 const port = '8099';
 const url = 'http://localhost:8099';
