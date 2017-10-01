@@ -12,13 +12,15 @@ const QiQiuYun = require('qiqiuyun-sdk');
 var superagent = require('superagent');
 var request = require("request");
 var cheerio = require('cheerio');
-var fs = require('fs'); 
+var fs = require('fs');
 
 var users = [];
 var usersArr = [];
 var arrAllSocket = [];
 var avatarImgArr = [];
 var filesUrlArr = [];
+var filesSuffix;
+var filesIndex = 0;
 
 App.use(bodyParser.json());
 App.use(bodyParser.urlencoded({ extended: false }));
@@ -166,9 +168,12 @@ superagent.get('http://www.ui.cn/').end(function(err, docs) {
   });
     // console.log('avatarImgArr', avatarImgArr);
     avatarImgArr.map((val, index) => {
-      filesUrlArr = val.split('/');
+      filesSuffix = val.split('.');
+      if (filesSuffix[filesSuffix.length - 1] == 'png') {
+        downloadImg(val, filesIndex + '.' + filesSuffix[filesSuffix.length - 1]);
+        filesIndex += 1;
+      }
       // console.log(filesUrlArr[filesUrlArr.length - 1]);
-      downloadImg(val, filesUrlArr[filesUrlArr.length - 1]);
     })
 })
 

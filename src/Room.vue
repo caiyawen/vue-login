@@ -24,6 +24,10 @@
       </el-col>
       <el-col :span="16" class="chat-window">
         <div class="chatArea">
+          <div class="current-chat">
+            <span v-if="to == 'group'">群聊大厅</span>
+            <span v-else>{{ to }}</span>  
+          </div>
           <ul class="messages">
             <li v-bind:key="index" v-for="(message, index) in msgList[to]">
               <div v-if="message.from == username" class="chat-right">
@@ -41,7 +45,7 @@
                   </el-dialog> -->
                 </span>
               </div>
-              <div v-else>      
+              <div v-else>
                 <span v-if="message.type == 'word'">
                   {{ message.from }}<span class="chat-msg" >{{ message.msg }}</span>
                 </span>
@@ -55,8 +59,8 @@
                   <!-- <el-dialog title="课件查看" :visible.sync="fileDialog">
                     <player :resNo="message.msg"></player>
                   </el-dialog> -->
-                </span>          
-              </div>   
+                </span>
+              </div>
             </li>
           </ul>
         </div>
@@ -91,7 +95,7 @@ export default {
   data() {
     return {
       username: '',
-      to: '',
+      to: 'group',
       msg: '',
       dialogVisible: false,
       fileDialog: false,
@@ -121,10 +125,14 @@ export default {
       this.socket.on('user join', (users) => {
         console.log(users);
         this.userList = [];
-        users.map((val) => {
+        users.map((val, index) => {
           if (val.name !== this.username) {
             console.log('val', val);
-            this.userList.push({ name: val.name, avatar: val.avatar, unread: 0 });
+            this.userList.push({
+              name: val.name,
+              avatar: require(`../image/${index}.png`),
+              unread: 0
+            });
           }
         });
         console.log(this.userList)
@@ -283,7 +291,7 @@ export default {
   &.right {
     &:before {
       left: auto;
-      right: -5px;      
+      right: -5px;
       border-width: 5px 0 5px 5px;
       border-color: transparent transparent transparent darkgreen;
     }
